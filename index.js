@@ -6,8 +6,8 @@ const getFormattedConfig = (config) => {
 
 // Entrypoint
 
-let inputRawPkg = null
-function inputRaw(selector, config = null) {
+let inputRaw = null
+function lib(selector, config = null) {
   let initError = false
   let selectorAsConfig = false
   if (!config) {
@@ -35,22 +35,22 @@ function inputRaw(selector, config = null) {
     const computedConf = selectorAsConfig ? selector : config
     const computedSelector = !selectorAsConfig ? selector : null
     const formattedConf = getFormattedConfig(computedConf)
-    inputRawPkg = new InputRaw(
+    inputRaw = new InputRaw(
       computedSelector,
       formattedConf,
       autoMount
     )
 
-    console.log(inputRawPkg);
+    console.log(inputRaw);
   }
 
-  return inputRaw
+  return lib
 }
 
 // Public API
 
-inputRaw.attach = function() {
+lib.attach = function() {
   console.log('Soon...');
 }
 
-export default inputRaw
+export default lib
