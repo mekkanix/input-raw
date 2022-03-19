@@ -6,6 +6,9 @@
   "repository": "git@github.com:mekkanix/input-raw.git",
   "author": "polo <paulguzdariviere@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "build:dev": "webpack build --watch"
+  },
   "dependencies": {
     "babel-loader": "^8.2.3",
     "css-loader": "^6.4.0",
