@@ -52,7 +52,7 @@ module.exports = (env, opts) => {
                   indentedSyntax: true,
                   indentWidth: 2,
                   includePaths: [
-                    path.join(rootDir, '/app/ui/assets/sass'),
+                    path.join(rootDir, '/src/sass'),
                   ],
                 },
               },
@@ -60,11 +60,6 @@ module.exports = (env, opts) => {
           ]
         },
       ]
-    },
-    resolve: {
-      alias: {
-        '@': path.join(rootDir, '/src/'),
-      }
     },
     plugins: [
       new MiniCssExtractPlugin({

@@ -1,4 +1,5 @@
-import InputRaw from './src/inputRaw'
+import InputRaw from './src/js/InputRaw.js'
+import './src/sass/main.sass'
 
 const getFormattedConfig = (config) => {
   return {}
@@ -40,8 +41,6 @@ function lib(selector, config = null) {
       formattedConf,
       autoMount
     )
-
-    console.log(inputRaw);
   }
 
   return lib
@@ -50,7 +49,7 @@ function lib(selector, config = null) {
 // Public API
 
 lib.attach = function() {
-  console.log('Soon...');
+  inputRaw.init()
 }
 
 export default lib
