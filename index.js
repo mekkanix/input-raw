@@ -48,8 +48,8 @@ function lib(selector, config = null) {
 
 // Public API
 
-lib.attach = function() {
-  inputRaw.init()
+lib.attach = function(selector) {
+  inputRaw.init(selector)
 }
 
 export default lib

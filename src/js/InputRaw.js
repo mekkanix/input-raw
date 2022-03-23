@@ -7,14 +7,15 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons'
 export default class InputRaw {
   _initialized = false
   _autoMount = false
-  attachedElement = null
+  _defaultType = 'object'
+  rootElement = null
 
   constructor(selector, config = null, autoMount = false) {
-    this._initAttachedElement(selector)
+    this._initRootElement(selector)
     this._autoMount = autoMount
 
     if (this._autoMount) {
-      if (!this.attachedElement) {
+      if (!this.rootElement) {
         console.error(`[InputRaw] Cannot find element matching "${selector}" selector.`)
         return
       }
@@ -22,18 +23,28 @@ export default class InputRaw {
     }
   }
 
-  _initAttachedElement(selector) {
+  _initRootElement(selector) {
     const element = document.querySelector(selector)
     if (element) {
-      this.attachedElement = element
+      this.rootElement = element
     }
   }
 
-  init() {
-    // Init dependencies
+  init(selector = null) {
+    if (selector) {
+      this._initRootElement(selector)
+    }
+    this._initDependencies()
+    this._generateDOM()
+  }
+
+  _initDependencies() {
     faLib.add(faPlus)
     icon({ prefix: 'fas', iconName: 'plus', })
-    // Init module
-    // ...
+  }
+
+  _generateDOM() {
+    const root = this.rootElement
+    root.classList.add('input-raw')
   }
 }
