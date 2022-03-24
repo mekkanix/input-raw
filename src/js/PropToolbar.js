@@ -22,7 +22,6 @@ export default class PropToolbar {
   }
 
   _initDOM() {
-    console.log(this._actions);
     // Base
     this.attachedElement.classList.add('ir__prop-toolbar')
     // Actions
@@ -32,7 +31,7 @@ export default class PropToolbar {
       const actionElement = document.createElement('div')
       actionElement.classList.add('ir__prop-toolbar__action')
       actionElement.classList.add(action.class)
-      actionElement.addEventListener('click', action.handler)
+      actionElement.addEventListener('click', action.eventHandler)
       let icnHTML = null
       if (action.icon) {
         const icn = icon({ prefix: 'fas', iconName: action.icon, })
@@ -48,48 +47,48 @@ export default class PropToolbar {
   }
 
   _initActions() {
-    // Note: `s` stands for `state` in following callbacks.
+    // Note: `s` stands for `state` in the following callbacks.
     const actions = [
       {
         name: 'edit',
         enabled: s => s.initialized && s.editable && !s.editing,
         class: 'edit',
-        handler: this.onEditClick,
+        eventHandler: this.onEditClick,
         icon: 'edit',
       },
       {
         name: 'validate_edit',
         enabled: s => s.editable && s.editing && !s.errored,
         class: 'validate-edit',
-        handler: this.onValidateEditClick,
+        eventHandler: this.onValidateEditClick,
         icon: 'check',
       },
       {
         name: 'cancel_edit',
         enabled: s => s.editable && s.editing,
         class: 'cancel-edit',
-        handler: this.onCancelEditClick,
+        eventHandler: this.onCancelEditClick,
         icon: 'times',
       },
       {
         name: 'delete',
         enabled: s => s.initialized,
         class: 'delete',
-        handler: this.onDeleteClick,
+        eventHandler: this.onDeleteClick,
         icon: 'trash',
       },
       {
         name: 'convert_to_object',
         enabled: s => s.initialized && s.toObject,
         class: 'convert2object',
-        handler: this.onConvertToObjectClick,
+        eventHandler: this.onConvertToObjectClick,
         text: '{}',
       },
       {
         name: 'convert_to_array',
         enabled: s => s.initialized && s.toArray,
         class: 'convert2array',
-        handler: this.onConvertToArrayClick,
+        eventHandler: this.onConvertToArrayClick,
         text: '[]',
       },
     ]

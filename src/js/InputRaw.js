@@ -39,14 +39,6 @@ export default class InputRaw {
     }
   }
 
-  init(selector = null) {
-    if (selector) {
-      this._initRootElement(selector)
-    }
-    this._initDependencies()
-    this._initPropToolbar()
-  }
-
   _initDependencies() {
     // FA icons
     faLib.add(faEdit)
@@ -59,6 +51,16 @@ export default class InputRaw {
   _initPropToolbar() {
     const toolbar = new PropToolbar()
     toolbar.updateState('initialized', true)
+    toolbar.updateState('editable', true)
+    console.log(toolbar);
     this.rootElement.appendChild(toolbar.attachedElement)
+  }
+
+  init(selector = null) {
+    if (selector) {
+      this._initRootElement(selector)
+    }
+    this._initDependencies()
+    this._initPropToolbar()
   }
 }
