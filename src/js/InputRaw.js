@@ -1,8 +1,13 @@
 import {
   library as faLib,
-  icon,
 } from '@fortawesome/fontawesome-svg-core'
-import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import {
+  faEdit,
+  faCheck,
+  faTimes,
+  faTrash,
+  faPlus,
+} from '@fortawesome/free-solid-svg-icons'
 import PropObject from './PropObject.js'
 import PropArray from './PropArray.js'
 import PropToolbar from './PropToolbar.js'
@@ -43,12 +48,17 @@ export default class InputRaw {
   }
 
   _initDependencies() {
+    // FA icons
+    faLib.add(faEdit)
+    faLib.add(faCheck)
+    faLib.add(faTimes)
+    faLib.add(faTrash)
     faLib.add(faPlus)
-    icon({ prefix: 'fas', iconName: 'plus', })
   }
 
   _initPropToolbar() {
     const toolbar = new PropToolbar()
+    toolbar.updateState('initialized', true)
     this.rootElement.appendChild(toolbar.attachedElement)
   }
 }
