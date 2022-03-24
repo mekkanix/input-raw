@@ -8,7 +8,7 @@ const getFormattedConfig = (config) => {
 // Entrypoint
 
 let inputRaw = null
-function lib(selector, config = null) {
+function InputRawLib(selector, config = null) {
   let initError = false
   let selectorAsConfig = false
   if (!config) {
@@ -43,13 +43,13 @@ function lib(selector, config = null) {
     )
   }
 
-  return lib
+  return InputRawLib
 }
 
 // Public API
 
-lib.attach = function(selector) {
+InputRawLib.mount = function(selector) {
   inputRaw.init(selector)
 }
 
-export default lib
+export default InputRawLib

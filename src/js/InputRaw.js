@@ -3,14 +3,17 @@ import {
   icon,
 } from '@fortawesome/fontawesome-svg-core'
 import { faPlus } from '@fortawesome/free-solid-svg-icons'
+import PropObject from './PropObject.js'
+import PropArray from './PropArray.js'
+import PropToolbar from './PropToolbar.js'
 
 export default class InputRaw {
   _initialized = false
   _autoMount = false
-  _defaultType = 'object'
+  tree = {}
   rootElement = null
 
-  constructor(selector, config = null, autoMount = false) {
+  constructor(selector, config, autoMount = false) {
     this._initRootElement(selector)
     this._autoMount = autoMount
 
@@ -27,6 +30,7 @@ export default class InputRaw {
     const element = document.querySelector(selector)
     if (element) {
       this.rootElement = element
+      this.rootElement.classList.add('input-raw')
     }
   }
 
@@ -35,7 +39,7 @@ export default class InputRaw {
       this._initRootElement(selector)
     }
     this._initDependencies()
-    this._generateDOM()
+    this._initPropToolbar()
   }
 
   _initDependencies() {
@@ -43,8 +47,8 @@ export default class InputRaw {
     icon({ prefix: 'fas', iconName: 'plus', })
   }
 
-  _generateDOM() {
-    const root = this.rootElement
-    root.classList.add('input-raw')
+  _initPropToolbar() {
+    const toolbar = new PropToolbar()
+    this.rootElement.appendChild(toolbar.attachedElement)
   }
 }
