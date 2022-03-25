@@ -3,23 +3,12 @@
   font-family: 'Source Code Pro', monospace
 
   // Generic
-  .ir__primitive-value
-    &.t-null
-      color: #ba4b00
-    &.t-boolean
-      color: #aa3aff
-    &.t-string
-      color: #148e15
-    &.t-number
-      color: #ba4b00
+  // ...
 
-  // Props (common)
+  // Prop: object, array
   .ir__prop-object,
   .ir__prop-array
     color: #444
-
-    .ir__prop-object__kname-wrapper
-      position: relative
 
     // Actions (common)
     .ir__prop-actions,
@@ -122,35 +111,49 @@
       &:hover
         color: #333
 
-  // Toolbar
-  // .ir__prop-toolbar
-  //   .ir__prop-toolbar__actions
-  //     display: flex
-  //     padding-left: 10px
-  //     align-items: center
-  //     font-size: 11px
+// Components ----------------------------------------
 
-  //     .ir__prop-toolbar__action
-  //       width: 21px
-  //       height: 21px
-  //       flex: 0 0 21px
-  //       display: flex
-  //       align-items: center
-  //       justify-content: center
-  //       color: #777
-  //       cursor: pointer
+// Primitive value
+.ir__primitive-value
+  &.t-null
+    color: #ba4b00
+  &.t-boolean
+    color: #aa3aff
+  &.t-string
+    color: #148e15
+  &.t-number
+    color: #ba4b00
 
-  //       &:hover
-  //         color: #333
 
-  //       &.convert2object,
-  //       &.convert2array
-  //         position: relative
-  //         top: -1px
-  //         font-family: 'Source Code Pro', monospace
-  //         font-size: 12px
-  //         font-weight: 700
+// Toolbar
+.ir__prop-toolbar
+  .ir__prop-toolbar__actions
+    display: flex
+    padding-left: 10px
+    align-items: center
+    font-size: 11px
 
-  //         span
-  //           position: relative
-  //           top: -1px
+    .ir__prop-toolbar__action
+      width: 21px
+      height: 21px
+      flex: 0 0 21px
+      display: flex
+      align-items: center
+      justify-content: center
+      color: #777
+      cursor: pointer
+
+      &:hover
+        color: #333
+
+      &.convert2object,
+      &.convert2array
+        position: relative
+        top: -1px
+        font-family: 'Source Code Pro', monospace
+        font-size: 12px
+        font-weight: 700
+
+        span
+          position: relative
+          top: -1px
