@@ -2,20 +2,34 @@
   width: 100%
   font-family: 'Source Code Pro', monospace
 
+  // Generic
+  .ir__primitive-value
+    &.t-null
+      color: #ba4b00
+    &.t-boolean
+      color: #aa3aff
+    &.t-string
+      color: #148e15
+    &.t-number
+      color: #ba4b00
+
   // Props (common)
   .ir__prop-object,
   .ir__prop-array
     color: #444
 
-  // Toolbar
-  .ir__prop-toolbar
-    .ir__prop-toolbar__actions
-      display: flex
+    .ir__prop-object__kname-wrapper
+      position: relative
+
+    // Actions (common)
+    .ir__prop-actions,
+    .ir__prop-object__row-actions
+      display: none
       padding-left: 10px
       align-items: center
       font-size: 11px
 
-      .ir__prop-toolbar__action
+      .ir__prop-object__action
         width: 21px
         height: 21px
         flex: 0 0 21px
@@ -39,3 +53,104 @@
           span
             position: relative
             top: -1px
+
+  // Prop: Object
+  // ...
+
+  // Prop: Array
+  // ...
+
+  // Prop: Primitive
+  .ir__prop-primitive
+    position: relative
+    display: flex
+    align-items: center
+    padding: 0 0 0 15px
+
+    &.idle .ir__prop-name
+      border: 1px solid transparent
+
+      .ir__prop-colon
+        margin-left: 1px
+
+      &.ir__prop-colon
+        margin-left: 1px
+
+    &:hover .ir__prop-actions
+      display: block
+
+    .ir__prop-name
+      display: inline-flex
+      align-items: baseline
+      margin: 0 5px 0 0
+      font-size: 14px
+
+    .ir__prop-value
+      flex: 1 1 auto
+      display: flex
+      position: relative
+      font-size: 14px
+
+      .input-value
+        width: auto
+
+  // Actions (row)
+  .ir__prop-object__row-actions
+    display: flex
+    margin-left: 15px
+    padding-left: 0
+    padding-top: 4px
+
+    &:hover .ir__prop-object__row-action,
+    &:hover .ir__prop-object__row-action:not(.add-primitive)
+      display: flex
+
+    .ir__prop-action
+      flex: 0 0 auto
+      color: #777
+      cursor: pointer
+      text-align: center
+
+      &.add-primitive
+        font-size: 9px
+
+      &:not(.add-primitive)
+        display: none
+        width: auto
+        padding: 0 4px
+
+      &:hover
+        color: #333
+
+  // Toolbar
+  // .ir__prop-toolbar
+  //   .ir__prop-toolbar__actions
+  //     display: flex
+  //     padding-left: 10px
+  //     align-items: center
+  //     font-size: 11px
+
+  //     .ir__prop-toolbar__action
+  //       width: 21px
+  //       height: 21px
+  //       flex: 0 0 21px
+  //       display: flex
+  //       align-items: center
+  //       justify-content: center
+  //       color: #777
+  //       cursor: pointer
+
+  //       &:hover
+  //         color: #333
+
+  //       &.convert2object,
+  //       &.convert2array
+  //         position: relative
+  //         top: -1px
+  //         font-family: 'Source Code Pro', monospace
+  //         font-size: 12px
+  //         font-weight: 700
+
+  //         span
+  //           position: relative
+  //           top: -1px

@@ -8,6 +8,7 @@ import {
   faTrash,
   faPlus,
 } from '@fortawesome/free-solid-svg-icons'
+import PropPrimitive from './PropPrimitive.js'
 import PropObject from './PropObject.js'
 import PropArray from './PropArray.js'
 import PropToolbar from './PropToolbar.js'
@@ -15,7 +16,7 @@ import PropToolbar from './PropToolbar.js'
 export default class InputRaw {
   _initialized = false
   _autoMount = false
-  tree = {}
+  tree = null
   rootElement = null
 
   constructor(selector, config, autoMount = false) {
@@ -51,12 +52,14 @@ export default class InputRaw {
   _initPropToolbar() {
     const toolbar = new PropToolbar()
     toolbar.updateState('initialized', true)
-    console.log(toolbar);
-    this.rootElement.appendChild(toolbar.attachedElement)
+    // this.rootElement.appendChild(toolbar.attachedElement)
   }
 
   _initDefaultState() {
     const propObject = new PropObject()
+    propObject.setProp('test', new PropObject())
+    propObject.setProp('test2', new PropPrimitive(300))
+    this.tree = propObject
     this.rootElement.appendChild(propObject.attachedElement)
   }
 
