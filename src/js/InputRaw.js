@@ -51,9 +51,13 @@ export default class InputRaw {
   _initPropToolbar() {
     const toolbar = new PropToolbar()
     toolbar.updateState('initialized', true)
-    toolbar.updateState('editable', true)
     console.log(toolbar);
     this.rootElement.appendChild(toolbar.attachedElement)
+  }
+
+  _initDefaultState() {
+    const propObject = new PropObject()
+    this.rootElement.appendChild(propObject.attachedElement)
   }
 
   init(selector = null) {
@@ -61,6 +65,7 @@ export default class InputRaw {
       this._initRootElement(selector)
     }
     this._initDependencies()
+    this._initDefaultState()
     this._initPropToolbar()
   }
 }
