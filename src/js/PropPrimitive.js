@@ -49,4 +49,8 @@ export default class PropPrimitive {
     this.fmtValue = formatPrimitiveValueToCode(value, this.valueType)
     this._updateDOM()
   }
+
+  removeDOMElement() {
+    this.attachedElement.remove()
+  }
 }

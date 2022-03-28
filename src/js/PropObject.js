@@ -25,6 +25,7 @@ export default class PropObject {
   attachedElement = document.createElement('div')
   fieldWrapperElement = null
   propType = 'object'
+  nextValue = {}
   value = {}
 
   constructor() {
@@ -64,42 +65,20 @@ export default class PropObject {
   _updateDOM() {
     for (const [propKey, propValue] of Object.entries(this.value)) {
       let propElement = null
-      // New prop
-      if (!this._hasDOMPropKey(propKey)) {
-        switch (propValue.propType) {
-          case 'object':
-            propElement = this._generateDOMPartObjectProp(propKey, propValue)
-            break
-          case 'array':
-            propElement = this._generateDOMPartArrayProp(propKey, propValue)
-            break
-          case 'primitive':
-            propElement = this._generateDOMPartPrimitiveProp(propKey, propValue)
-            break
-        }
-        propElement.classList.add('ir_prop')
-        propElement.setAttribute('data-ir-prop-key', propKey)
-        this.fieldWrapperElement.appendChild(propElement)
-      
-      // Existing prop
-      } else {
-        // console.log('existing prop');
-        switch (propValue.propType) {
-          case 'object':
-            // propElement = this._updateDOMPartObjectPropByKey(propKey, propValue)
-            break
-          case 'array':
-            // propElement = this._updateDOMPartArrayPropByKey(propKey, propValue)
-            break
-          case 'primitive':
-            // this._updateDOMPartPrimitivePropByKey(propKey, propValue)
-            // propValue.setValue(propKey)
-            // console.log(propKey, propValue);
-            // propElement = this._updateDOMPartPrimitiveProp(propKey, propValue)
-            break
-        }
-        // console.log(propElement);
+      switch (propValue.propType) {
+        case 'object':
+          propElement = this._generateDOMPartObjectProp(propKey, propValue)
+          break
+        case 'array':
+          propElement = this._generateDOMPartArrayProp(propKey, propValue)
+          break
+        case 'primitive':
+          propElement = this._generateDOMPartPrimitiveProp(propKey, propValue)
+          break
       }
+      propElement.classList.add('ir_prop')
+      propElement.setAttribute('data-ir-prop-key', propKey)
+      this.fieldWrapperElement.appendChild(propElement)
     }
   }
 
@@ -111,6 +90,15 @@ export default class PropObject {
       }
     }
     return false
+  }
+
+  _getPropByKey(key) {
+    for (const [propKey, propValue] of Object.entries(this.value)) {
+      if (propKey === key) {
+        return propValue
+      }
+    }
+    return null
   }
 
   _generateDOMPartObjectProp(key, objectValue) {
@@ -155,12 +143,36 @@ export default class PropObject {
 
   _updateDOMPartPrimitivePropByKey(propKey, primitiveValue) {
     const propElement = getElementChildByPropKey(this.fieldWrapperElement, propKey)
-    propElement.
+    // propElement.
     console.log(propElement);
   }
 
-  setProp(name, value) {
-    this.value[name] = value
-    this._updateDOM()
+  _preparePropUpdate(propName, propValue) {
+    console.log(propName, propValue);
+  }
+
+  setProp(key, value) {
+    if (!this.value.hasOwnProperty(key)) {
+      this.value[key] = value
+    } else {
+
+    }
+    // for (const [key, value] of Object.entries(this.value)) {
+    //   let propElement = null
+    //   switch (propValue.propType) {
+    //     case 'object':
+    //       propElement = this._generateDOMPartObjectProp(propKey, propValue)
+    //       break
+    //     case 'array':
+    //       propElement = this._generateDOMPartArrayProp(propKey, propValue)
+    //       break
+    //     case 'primitive':
+    //       propElement = this._generateDOMPartPrimitiveProp(propKey, propValue)
+    //       break
+    //   }
+    //   propElement.classList.add('ir_prop')
+    //   propElement.setAttribute('data-ir-prop-key', propKey)
+    //   this.fieldWrapperElement.appendChild(propElement)
+    // }
   }
 }
