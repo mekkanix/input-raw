@@ -25,7 +25,6 @@ export default class PropObject {
   attachedElement = document.createElement('div')
   fieldWrapperElement = null
   propType = 'object'
-  nextValue = {}
   value = {}
 
   constructor() {
@@ -62,23 +61,25 @@ export default class PropObject {
     this.attachedElement.appendChild(rowActionsElement)
   }
 
-  _updateDOM() {
+  _generateDOM() {
     for (const [propKey, propValue] of Object.entries(this.value)) {
-      let propElement = null
-      switch (propValue.propType) {
-        case 'object':
-          propElement = this._generateDOMPartObjectProp(propKey, propValue)
-          break
-        case 'array':
-          propElement = this._generateDOMPartArrayProp(propKey, propValue)
-          break
-        case 'primitive':
-          propElement = this._generateDOMPartPrimitiveProp(propKey, propValue)
-          break
+      if (!this._hasDOMPropKey(propKey)) {
+        let propElement = null
+        switch (propValue.propType) {
+          case 'object':
+            propElement = this._generateDOMPartObjectProp(propKey, propValue)
+            break
+          case 'array':
+            propElement = this._generateDOMPartArrayProp(propKey, propValue)
+            break
+          case 'primitive':
+            propElement = this._generateDOMPartPrimitiveProp(propKey, propValue)
+            break
+        }
+        propElement.classList.add('ir_prop')
+        propElement.setAttribute('data-ir-prop-key', propKey)
+        this.fieldWrapperElement.appendChild(propElement)
       }
-      propElement.classList.add('ir_prop')
-      propElement.setAttribute('data-ir-prop-key', propKey)
-      this.fieldWrapperElement.appendChild(propElement)
     }
   }
 
@@ -131,48 +132,23 @@ export default class PropObject {
     return propElement
   }
 
-  _updateDOMPartObjectPropByKey(key, objectValue) {
-    console.log(key, objectValue);
-    return
-  }
-
-  _updateDOMPartArrayPropByKey(key, arrayValue) {
-    console.log(key, arrayValue);
-    return
-  }
-
-  _updateDOMPartPrimitivePropByKey(propKey, primitiveValue) {
-    const propElement = getElementChildByPropKey(this.fieldWrapperElement, propKey)
-    // propElement.
-    console.log(propElement);
-  }
-
-  _preparePropUpdate(propName, propValue) {
-    console.log(propName, propValue);
-  }
-
   setProp(key, value) {
     if (!this.value.hasOwnProperty(key)) {
       this.value[key] = value
+      this._generateDOM()
     } else {
+      const existingProp = this.value[key]
+      switch (value.propType) {
+        case 'object':
 
+          break
+        case 'array':
+
+          break
+        case 'primitive':
+          existingProp.setValue(value.value)
+          break
+      }
     }
-    // for (const [key, value] of Object.entries(this.value)) {
-    //   let propElement = null
-    //   switch (propValue.propType) {
-    //     case 'object':
-    //       propElement = this._generateDOMPartObjectProp(propKey, propValue)
-    //       break
-    //     case 'array':
-    //       propElement = this._generateDOMPartArrayProp(propKey, propValue)
-    //       break
-    //     case 'primitive':
-    //       propElement = this._generateDOMPartPrimitiveProp(propKey, propValue)
-    //       break
-    //   }
-    //   propElement.classList.add('ir_prop')
-    //   propElement.setAttribute('data-ir-prop-key', propKey)
-    //   this.fieldWrapperElement.appendChild(propElement)
-    // }
   }
 }
