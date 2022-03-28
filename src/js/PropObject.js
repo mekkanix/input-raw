@@ -23,19 +23,31 @@ export default class PropObject {
     },
   ]
   attachedElement = document.createElement('div')
-  fieldWrapperElement = null
+  _wrapperElement = null
+  _placeholderElement = null
   propType = 'object'
-  value = {}
+  $value = {}
 
-  constructor() {
+  constructor(value = null) {
+    if (value) {
+      this.$value = value
+    }
     this._initDOM()
+    this._computeDOM()
   }
 
   _initDOM() {
     // Base
     this.attachedElement.classList.add('ir__prop-object')
-    this.fieldWrapperElement = document.createElement('div')
-    this.fieldWrapperElement.classList.add('ir__prop-object__field-wrapper')
+    this.attachedElement.classList.add('ir__prop-object--open')
+    this._wrapperElement = document.createElement('div')
+    this._wrapperElement.classList.add('ir__prop-wrapper')
+    this._placeholderElement = document.createElement('div')
+    this._placeholderElement.classList.add('ir__prop-object__placeholder')
+    this._blankValueElement = document.createElement('div')
+    this._blankValueElement.classList.add('ir__prop-object__blank')
+    this._blankValueElement.innerHTML = '(empty)'
+
     // Row actions
     const rowActionsElement = document.createElement('div')
     rowActionsElement.classList.add('ir__prop-object__row-actions')
@@ -56,13 +68,18 @@ export default class PropObject {
       rowActionElement.innerHTML = icnHTML
       rowActionsElement.appendChild(rowActionElement)
     }
-    // Structure
-    this.attachedElement.appendChild(this.fieldWrapperElement)
+
+    // Main DOM building
+    this.attachedElement.appendChild(this._wrapperElement)
     this.attachedElement.appendChild(rowActionsElement)
+    if (!Object.keys(this.$value).length) {
+      this.attachedElement.appendChild(this._blankValueElement)
+    }
   }
 
-  _generateDOM() {
-    for (const [propKey, propValue] of Object.entries(this.value)) {
+  _computeDOM() {
+    // Processing: values
+    for (const [propKey, propValue] of Object.entries(this.$value)) {
       if (!this._hasDOMPropKey(propKey)) {
         let propElement = null
         switch (propValue.propType) {
@@ -76,15 +93,21 @@ export default class PropObject {
             propElement = this._generateDOMPartPrimitiveProp(propKey, propValue)
             break
         }
-        propElement.classList.add('ir_prop')
+        propElement.classList.add('ir__prop')
         propElement.setAttribute('data-ir-prop-key', propKey)
-        this.fieldWrapperElement.appendChild(propElement)
+        this._wrapperElement.appendChild(propElement)
       }
+    }
+    // Processnig: "blank" state
+    if (Object.keys(this.$value).length) {
+      this._blankValueElement.remove()
+    } else {
+      this.attachedElement.appendChild(this._blankValueElement)
     }
   }
 
   _hasDOMPropKey(key) {
-    for (const element of this.fieldWrapperElement.children) {
+    for (const element of this._wrapperElement.children) {
       const propKey = element.getAttribute('data-ir-prop-key')
       if (propKey === key) {
         return true
@@ -94,7 +117,7 @@ export default class PropObject {
   }
 
   _getPropByKey(key) {
-    for (const [propKey, propValue] of Object.entries(this.value)) {
+    for (const [propKey, propValue] of Object.entries(this.$value)) {
       if (propKey === key) {
         return propValue
       }
@@ -103,8 +126,42 @@ export default class PropObject {
   }
 
   _generateDOMPartObjectProp(key, objectValue) {
-    console.log(key, objectValue);
-    return
+    // Building: main wrapper
+    const element = document.createElement('div')
+    element.classList.add('ir__prop-subobject')
+
+    // Building: prop key
+    const nameElement = document.createElement('div')
+    nameElement.classList.add('ir__prop-kname-box')
+    const knameContentElement = document.createElement('div')
+    knameContentElement.classList.add('ir__prop-kname__content')
+    // -- Icon
+    const nameIcnElement = document.createElement('div')
+    nameIcnElement.classList.add('ir__prop-kname__icn')
+    const icn = icon({ prefix: 'fas', iconName: 'caret-right', })
+    const icnHTML = toHtml(icn.abstract[0])
+    nameIcnElement.innerHTML = icnHTML
+    // -- Text
+    const propKeyNameElement = document.createElement('div')
+    propKeyNameElement.classList.add('ir__prop-object-kname')
+    propKeyNameElement.innerHTML = key
+    const propKeyNameColonElement = document.createElement('div')
+    propKeyNameColonElement.classList.add('ir__prop-kname__colon')
+    propKeyNameColonElement.innerHTML = ':'
+    // -- DOM building
+    propKeyNameElement.appendChild(propKeyNameColonElement)
+    knameContentElement.appendChild(nameIcnElement)
+    knameContentElement.appendChild(propKeyNameElement)
+    nameElement.appendChild(knameContentElement)
+
+    // Building: prop value
+    objectValue.attachedElement.classList.add('ir__prop-object--nested')
+    objectValue.attachedElement.classList.add('ir__prop-object--open')
+
+    // Main DOM building
+    element.appendChild(nameElement)
+    element.appendChild(objectValue.attachedElement)
+    return element
   }
 
   _generateDOMPartArrayProp(key, arrayValue) {
@@ -113,31 +170,29 @@ export default class PropObject {
   }
 
   _generateDOMPartPrimitiveProp(key, primitiveValue) {
-    // Prop "box"
-    const propElement = document.createElement('div')
-    propElement.classList.add('ir__prop-primitive')
-    // Prop name
-    const propNameElement = document.createElement('div')
-    propNameElement.classList.add('ir__prop-name')
-    propNameElement.innerHTML = key
-    // Prop value
-    const propValueElement = document.createElement('div')
-    propValueElement.classList.add('ir__prop-value')
-    propValueElement.appendChild(primitiveValue.attachedElement)
-    // console.log(primitiveValue);
-    // Structure
-    propElement.appendChild(propNameElement)
-    propElement.appendChild(propValueElement)
-    // propElement.appendChild(value.attachedElement)
-    return propElement
+    // Building: prop "box"
+    const element = document.createElement('div')
+    element.classList.add('ir__prop-primitive')
+    // Building: prop key
+    const nameElement = document.createElement('div')
+    nameElement.classList.add('ir__prop-name')
+    nameElement.innerHTML = key
+    // Building: prop value
+    const valueElement = document.createElement('div')
+    valueElement.classList.add('ir__prop-value')
+    valueElement.appendChild(primitiveValue.attachedElement)
+    // Main DOM building
+    element.appendChild(nameElement)
+    element.appendChild(valueElement)
+    return element
   }
 
   setProp(key, value) {
-    if (!this.value.hasOwnProperty(key)) {
-      this.value[key] = value
-      this._generateDOM()
+    if (!this.$value.hasOwnProperty(key)) {
+      this.$value[key] = value
+      this._computeDOM()
     } else {
-      const existingProp = this.value[key]
+      const existingProp = this.$value[key]
       switch (value.propType) {
         case 'object':
 

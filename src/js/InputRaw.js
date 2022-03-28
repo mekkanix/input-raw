@@ -7,6 +7,7 @@ import {
   faTimes,
   faTrash,
   faPlus,
+  faCaretRight,
 } from '@fortawesome/free-solid-svg-icons'
 import PropPrimitive from './PropPrimitive.js'
 import PropObject from './PropObject.js'
@@ -47,6 +48,7 @@ export default class InputRaw {
     faLib.add(faTimes)
     faLib.add(faTrash)
     faLib.add(faPlus)
+    faLib.add(faCaretRight)
   }
 
   _initPropToolbar() {
@@ -57,9 +59,12 @@ export default class InputRaw {
 
   _initDefaultState() {
     const propObject = new PropObject()
-    // propObject.setProp('test', new PropObject())
-    propObject.setProp('test2', new PropPrimitive('toto'))
-    propObject.setProp('test3', new PropPrimitive(300000000))
+    propObject.setProp('test', new PropObject())
+    propObject.$value.test.setProp('toto', new PropPrimitive(true))
+    propObject.setProp('test2', new PropObject())
+    propObject.$value.test2.setProp('toto', new PropObject())
+    // propObject.setProp('test3', new PropPrimitive('toto'))
+    // propObject.setProp('test4', new PropPrimitive(300000000))
     console.log(propObject);
     this.tree = propObject
     this.rootElement.appendChild(propObject.attachedElement)

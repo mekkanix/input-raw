@@ -5,12 +5,70 @@
   // Generic
   // ...
 
-  // Prop: object, array
+  // Nested Props
+
+  // -- Object, Array
   .ir__prop-object,
   .ir__prop-array
     color: #444
 
-    // Actions (common)
+    // -- States
+    &--nested
+      position: relative
+      padding-left: 22px
+    &--open > .ir__prop-wrapper > .ir__prop > .ir__prop-kname-box > .ir__prop-kname__content > .ir__prop-kname__icn
+      transform: rotate(90deg)
+
+    // -- Key
+    .ir__prop-kname-box
+      position: relative
+      display: flex
+      align-items: center
+      min-height: 22px
+      padding-bottom: 1px
+      color: #444
+      cursor: pointer
+
+      &:hover .ir__prop-object-actions
+        display: flex
+
+      // &.open > .ir__prop-kname__content > .ir__prop-kname__icn
+      //   transform: rotate(90deg)
+
+      .ir__prop-kname__content
+        display: flex
+        align-items: center
+
+        // &.opening-disabled .ir__prop-kname__icn
+        //   color: #aaa
+
+        .ir__prop-kname__icn
+          position: absolute
+          left: 4px
+          top: 3px
+        .ir__prop-object-kname
+          display: flex
+          padding-left: 15px
+          font-size: 14px
+        .ir__prop-object__placeholder
+          position: relative
+          top: 1px
+          padding-left: 5px
+          font-size: 12px
+          color: #909090
+          font-weight: 500
+          letter-spacing: 0.5px
+        .prop-type
+          position: relative
+          top: -1px
+          color: #909090
+          font-size: 14px
+          font-weight: 700
+        .prop-type-icn
+          position: relative
+          top: -2px
+
+    // -- Actions
     .ir__prop-actions,
     .ir__prop-object__row-actions
       display: none
@@ -43,13 +101,20 @@
             position: relative
             top: -1px
 
-  // Prop: Object
+    // -- Blank placeholder
+    .ir__prop-object__blank
+      padding: 1px 0 1px 15px
+      font-size: 14px
+      font-style: italic
+      color: #999
+
+  // -- Object
   // ...
 
-  // Prop: Array
+  // -- Array
   // ...
 
-  // Prop: Primitive
+  // -- Primitive
   .ir__prop-primitive
     position: relative
     display: flex
@@ -111,51 +176,7 @@
       &:hover
         color: #333
 
-// Components ----------------------------------------
+  // Components ----------------------------------------
 
-// Primitive value
-.ir__primitive-value
-  &.t-null
-    color: #ba4b00
-  &.t-boolean
-    color: #aa3aff
-  &.t-string
-    color: #148e15
-  &.t-number
-    color: #ba4b00
-  &.t-date
-    // ...
-
-
-// Toolbar
-.ir__prop-toolbar
-  .ir__prop-toolbar__actions
-    display: flex
-    padding-left: 10px
-    align-items: center
-    font-size: 11px
-
-    .ir__prop-toolbar__action
-      width: 21px
-      height: 21px
-      flex: 0 0 21px
-      display: flex
-      align-items: center
-      justify-content: center
-      color: #777
-      cursor: pointer
-
-      &:hover
-        color: #333
-
-      &.convert2object,
-      &.convert2array
-        position: relative
-        top: -1px
-        font-family: 'Source Code Pro', monospace
-        font-size: 12px
-        font-weight: 700
-
-        span
-          position: relative
-          top: -1px
+  @import './_primitivevalue.sass'
+  @import './_proptoolbar.sass'
