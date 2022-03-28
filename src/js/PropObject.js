@@ -27,6 +27,15 @@ export default class PropObject {
   _placeholderElement = null
   propType = 'object'
   $value = {}
+  state = {
+    initialized: false,
+    editing: false,
+    editable: false,
+    errored: false,
+    toObject: false,
+    toArray: false,
+    open: true,
+  }
 
   constructor(value = null) {
     if (value) {
@@ -133,6 +142,7 @@ export default class PropObject {
     // Building: prop key
     const nameElement = document.createElement('div')
     nameElement.classList.add('ir__prop-kname-box')
+    nameElement.addEventListener('click', this._onKNameBoxClick.bind(this))
     const knameContentElement = document.createElement('div')
     knameContentElement.classList.add('ir__prop-kname__content')
     // -- Icon
@@ -145,18 +155,20 @@ export default class PropObject {
     const propKeyNameElement = document.createElement('div')
     propKeyNameElement.classList.add('ir__prop-object-kname')
     propKeyNameElement.innerHTML = key
-    const propKeyNameColonElement = document.createElement('div')
-    propKeyNameColonElement.classList.add('ir__prop-kname__colon')
-    propKeyNameColonElement.innerHTML = ':'
+    const keyNameColonElement = document.createElement('div')
+    keyNameColonElement.classList.add('ir__prop-kname__colon')
+    keyNameColonElement.innerHTML = ':'
     // -- DOM building
-    propKeyNameElement.appendChild(propKeyNameColonElement)
+    propKeyNameElement.appendChild(keyNameColonElement)
     knameContentElement.appendChild(nameIcnElement)
     knameContentElement.appendChild(propKeyNameElement)
     nameElement.appendChild(knameContentElement)
 
     // Building: prop value
     objectValue.attachedElement.classList.add('ir__prop-object--nested')
-    objectValue.attachedElement.classList.add('ir__prop-object--open')
+    if (this.state.open) {
+      objectValue.attachedElement.classList.add('ir__prop-object--open')
+    }
 
     // Main DOM building
     element.appendChild(nameElement)
@@ -177,6 +189,10 @@ export default class PropObject {
     const nameElement = document.createElement('div')
     nameElement.classList.add('ir__prop-name')
     nameElement.innerHTML = key
+    const keyNameColonElement = document.createElement('div')
+    keyNameColonElement.classList.add('ir__prop-kname__colon')
+    keyNameColonElement.innerHTML = ':'
+    nameElement.appendChild(keyNameColonElement)
     // Building: prop value
     const valueElement = document.createElement('div')
     valueElement.classList.add('ir__prop-value')
@@ -185,6 +201,12 @@ export default class PropObject {
     element.appendChild(nameElement)
     element.appendChild(valueElement)
     return element
+  }
+
+  _onKNameBoxClick(e) {
+    // e.stopPropagation()
+    // for ()
+    console.log(e.target);
   }
 
   setProp(key, value) {
