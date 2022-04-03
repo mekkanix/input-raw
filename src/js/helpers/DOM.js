@@ -16,3 +16,11 @@ export const getElementChildByClass = (element, cssClass) => {
   }
   return null
 }
+
+export const findElementParentByClass = (element, ccsClass) => {
+  if (!element || element.classList.contains(ccsClass)) {
+    return element
+  } else {
+    return findElementParentByClass(element.parentElement, ccsClass)
+  }
+}

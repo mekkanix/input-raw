@@ -4,6 +4,7 @@ import {
 } from '@fortawesome/fontawesome-svg-core'
 import {
   getElementChildByPropKey,
+  findElementParentByClass,
 } from './helpers/DOM.js'
 import PropPrimitive from './PropPrimitive.js'
 
@@ -48,7 +49,7 @@ export default class PropObject {
   _initDOM() {
     // Base
     this.attachedElement.classList.add('ir__prop-object')
-    this.attachedElement.classList.add('ir__prop-object--open')
+    // this.attachedElement.classList.add('ir__prop-object--open')
     this._wrapperElement = document.createElement('div')
     this._wrapperElement.classList.add('ir__prop-wrapper')
     this._placeholderElement = document.createElement('div')
@@ -167,7 +168,7 @@ export default class PropObject {
     // Building: prop value
     objectValue.attachedElement.classList.add('ir__prop-object--nested')
     if (this.state.open) {
-      objectValue.attachedElement.classList.add('ir__prop-object--open')
+      // objectValue.attachedElement.classList.add('ir__prop-object--open')
     }
 
     // Main DOM building
@@ -204,9 +205,11 @@ export default class PropObject {
   }
 
   _onKNameBoxClick(e) {
+    const kNameBoxElement = findElementParentByClass(e.target, 'ir__prop-kname-box')
+    const objectElement = findElementParentByClass(e.target, 'ir__prop')
+    console.log(kNameBoxElement, objectElement);
     // e.stopPropagation()
     // for ()
-    console.log(e.target);
   }
 
   setProp(key, value) {

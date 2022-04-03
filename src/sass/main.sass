@@ -16,8 +16,6 @@
     &--nested
       position: relative
       padding-left: 22px
-    &--open > .ir__prop-wrapper > .ir__prop > .ir__prop-kname-box > .ir__prop-kname__content > .ir__prop-kname__icn
-      transform: rotate(90deg)
 
     // -- Key
     .ir__prop-kname-box
@@ -107,6 +105,17 @@
       font-size: 14px
       font-style: italic
       color: #999
+
+    // -- Child objects/arrays + States
+    .ir__prop-object--nested,
+    .ir__prop-array--nested
+      display: none
+    .ir__prop--open
+      & > .ir__prop-kname-box .ir__prop-kname__icn
+        transform: rotate(90deg)
+      & > .ir__prop-object--nested,
+      & > .ir__prop-array--nested
+        display: block
 
   // -- Object
   // ...

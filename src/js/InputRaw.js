@@ -61,7 +61,11 @@ export default class InputRaw {
     const propObject = new PropObject()
     propObject.setProp('test', new PropObject())
     propObject.$value.test.setProp('toto', new PropPrimitive(true))
-    propObject.setProp('test2', new PropPrimitive(3.000))
+    propObject.$value.test.setProp('tata', new PropPrimitive('Bonjour'))
+    propObject.$value.test.setProp('titi', new PropObject())
+    propObject.setProp('test2', new PropObject())
+    propObject.$value.test2.setProp('toto', new PropPrimitive(true))
+    propObject.$value.test2.setProp('tata', new PropPrimitive('Bonjour'))
     // propObject.setProp('test3', new PropPrimitive('toto'))
     // propObject.setProp('test4', new PropPrimitive(300000000))
     console.log(propObject);
