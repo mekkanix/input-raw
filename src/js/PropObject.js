@@ -82,8 +82,20 @@ export default class PropObject {
     // Main DOM building
     this.attachedElement.appendChild(this._wrapperElement)
     this.attachedElement.appendChild(rowActionsElement)
-    if (!Object.keys(this.$value).length) {
+    // -- Processing: "blank" state
+    if (Object.keys(this.$value).length) {
+      this._blankValueElement.remove()
+    } else {
       this.attachedElement.appendChild(this._blankValueElement)
+    }
+    // -- Processing: "open" state
+    const parentPropElement = findElementParentByClass(this.attachedElement, 'ir__prop')
+    if (parentPropElement) {
+      if (this.state.open) {
+        parentPropElement.classList.add('ir__prop--open')
+      } else {
+        parentPropElement.classList.remove('ir__prop--open')
+      }
     }
   }
 
@@ -104,6 +116,9 @@ export default class PropObject {
             break
         }
         propElement.classList.add('ir__prop')
+        if (['object', 'array'].includes(propValue.propType) && propValue.state.open) {
+          propElement.classList.add('ir__prop--open')
+        }
         propElement.setAttribute('data-ir-prop-key', propKey)
         this._wrapperElement.appendChild(propElement)
       }
