@@ -3,7 +3,7 @@ import {
   toHtml,
 } from '@fortawesome/fontawesome-svg-core'
 import {
-  getElementChildByPropKey,
+  findElementChildByClass,
   findElementParentByClass,
 } from './helpers/DOM.js'
 import PropPrimitive from './PropPrimitive.js'
@@ -24,7 +24,9 @@ export default class PropObject {
     },
   ]
   attachedElement = document.createElement('div')
-  _wrapperElement = null
+  _propParentElement = null
+  _propKNameContentElement = null
+  _propWrapperElement = null
   _placeholderElement = null
   propType = 'object'
   $value = {}
@@ -48,16 +50,30 @@ export default class PropObject {
 
   _initDOM() {
     // Base
+    this._propParentElement = findElementParentByClass(this.attachedElement, 'ir__prop')
+    if (this._propParentElement) {
+      this._propKNameContentElement = findElementChildByClass(
+        this._propParentElement,
+        'ir__prop-kname__content',
+      )
+      this._propKNameContentElement.append(this._placeholderElement)
+    }
     this.attachedElement.classList.add('ir__prop-object')
-    // this.attachedElement.classList.add('ir__prop-object--open')
-    this._wrapperElement = document.createElement('div')
-    this._wrapperElement.classList.add('ir__prop-wrapper')
+    this._propWrapperElement = document.createElement('div')
+    this._propWrapperElement.classList.add('ir__prop-wrapper')
     this._placeholderElement = document.createElement('div')
     this._placeholderElement.classList.add('ir__prop-object__placeholder')
+    const placeholderText = document.createElement('div')
+    placeholderText.classList.add('ir__prop-object__placeholder-text')
+    placeholderText.innerHTML = 'Object'
+    const placeholderIcn = document.createElement('div')
+    placeholderIcn.classList.add('ir__prop-object__placeholder-icn')
+    placeholderIcn.innerHTML = '{&hellip;}'
+    this._placeholderElement.append(placeholderText)
+    this._placeholderElement.append(placeholderIcn)
     this._blankValueElement = document.createElement('div')
     this._blankValueElement.classList.add('ir__prop-object__blank')
     this._blankValueElement.innerHTML = '(empty)'
-
     // Row actions
     const rowActionsElement = document.createElement('div')
     rowActionsElement.classList.add('ir__prop-object__row-actions')
@@ -80,7 +96,7 @@ export default class PropObject {
     }
 
     // Main DOM building
-    this.attachedElement.appendChild(this._wrapperElement)
+    this.attachedElement.appendChild(this._propWrapperElement)
     this.attachedElement.appendChild(rowActionsElement)
     // -- Processing: "blank" state
     if (Object.keys(this.$value).length) {
@@ -88,18 +104,26 @@ export default class PropObject {
     } else {
       this.attachedElement.appendChild(this._blankValueElement)
     }
-    // -- Processing: "open" state
-    const parentPropElement = findElementParentByClass(this.attachedElement, 'ir__prop')
-    if (parentPropElement) {
+    
+    if (this._propParentElement) {
+      // -- Processing: "open" state
       if (this.state.open) {
-        parentPropElement.classList.add('ir__prop--open')
+        this._propParentElement.classList.add('ir__prop--open')
       } else {
-        parentPropElement.classList.remove('ir__prop--open')
+        this._propParentElement.classList.remove('ir__prop--open')
       }
     }
   }
 
   _computeDOM() {
+    this._propParentElement = findElementParentByClass(this.attachedElement, 'ir__prop')
+    if (this._propParentElement) {
+      this._propKNameContentElement = findElementChildByClass(
+        this._propParentElement,
+        'ir__prop-kname__content',
+      )
+      this._propKNameContentElement.append(this._placeholderElement)
+    }
     // Processing: values
     for (const [propKey, propValue] of Object.entries(this.$value)) {
       if (!this._hasDOMPropKey(propKey)) {
@@ -120,7 +144,7 @@ export default class PropObject {
           propElement.classList.add('ir__prop--open')
         }
         propElement.setAttribute('data-ir-prop-key', propKey)
-        this._wrapperElement.appendChild(propElement)
+        this._propWrapperElement.appendChild(propElement)
       }
     }
     // Processing: "blank" state
@@ -130,18 +154,17 @@ export default class PropObject {
       this.attachedElement.appendChild(this._blankValueElement)
     }
     // Processing: "open" state
-    const parentPropElement = findElementParentByClass(this.attachedElement, 'ir__prop')
-    if (parentPropElement) {
+    if (this._propParentElement) {
       if (this.state.open) {
-        parentPropElement.classList.add('ir__prop--open')
+        this._propParentElement.classList.add('ir__prop--open')
       } else {
-        parentPropElement.classList.remove('ir__prop--open')
+        this._propParentElement.classList.remove('ir__prop--open')
       }
     }
   }
 
   _hasDOMPropKey(key) {
-    for (const element of this._wrapperElement.children) {
+    for (const element of this._propWrapperElement.children) {
       const propKey = element.getAttribute('data-ir-prop-key')
       if (propKey === key) {
         return true
