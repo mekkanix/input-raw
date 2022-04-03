@@ -62,13 +62,11 @@ export default class InputRaw {
     propObject.setProp('test', new PropObject())
     propObject.$value.test.setProp('toto', new PropPrimitive(true))
     propObject.$value.test.setProp('tata', new PropPrimitive('Bonjour'))
-    propObject.$value.test.setProp('titi', new PropObject())
+    propObject.$value.test.setProp('titi', new PropObject())/
     propObject.setProp('test2', new PropObject())
     propObject.$value.test2.setProp('toto', new PropPrimitive(true))
     propObject.$value.test2.setProp('tata', new PropPrimitive('Bonjour'))
-    // propObject.setProp('test3', new PropPrimitive('toto'))
-    // propObject.setProp('test4', new PropPrimitive(300000000))
-    console.log(propObject);
+    // console.log(propObject);
     this.tree = propObject
     this.rootElement.appendChild(propObject.attachedElement)
   }

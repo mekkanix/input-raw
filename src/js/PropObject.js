@@ -108,11 +108,20 @@ export default class PropObject {
         this._wrapperElement.appendChild(propElement)
       }
     }
-    // Processnig: "blank" state
+    // Processing: "blank" state
     if (Object.keys(this.$value).length) {
       this._blankValueElement.remove()
     } else {
       this.attachedElement.appendChild(this._blankValueElement)
+    }
+    // Processing: "open" state
+    const parentPropElement = findElementParentByClass(this.attachedElement, 'ir__prop')
+    if (parentPropElement) {
+      if (this.state.open) {
+        parentPropElement.classList.add('ir__prop--open')
+      } else {
+        parentPropElement.classList.remove('ir__prop--open')
+      }
     }
   }
 
@@ -167,9 +176,6 @@ export default class PropObject {
 
     // Building: prop value
     objectValue.attachedElement.classList.add('ir__prop-object--nested')
-    if (this.state.open) {
-      // objectValue.attachedElement.classList.add('ir__prop-object--open')
-    }
 
     // Main DOM building
     element.appendChild(nameElement)
@@ -205,11 +211,11 @@ export default class PropObject {
   }
 
   _onKNameBoxClick(e) {
-    const kNameBoxElement = findElementParentByClass(e.target, 'ir__prop-kname-box')
-    const objectElement = findElementParentByClass(e.target, 'ir__prop')
-    console.log(kNameBoxElement, objectElement);
-    // e.stopPropagation()
-    // for ()
+    // const kNameBoxElement = findElementParentByClass(e.target, 'ir__prop-kname-box')
+    const propElement = findElementParentByClass(e.target, 'ir__prop')
+    const propKeyName = propElement.getAttribute('data-ir-prop-key')
+    const prop = this._getPropByKey(propKeyName)
+    prop.updateState('open', !prop.state.open)
   }
 
   setProp(key, value) {
@@ -229,6 +235,14 @@ export default class PropObject {
           existingProp.setValue(value.value)
           break
       }
+    }
+  }
+
+  updateState(state, value) {
+    const stateValue = this.state[state]
+    if (this.state.hasOwnProperty(state) && stateValue !== value) {
+      this.state[state] = value
+      this._computeDOM()
     }
   }
 }
