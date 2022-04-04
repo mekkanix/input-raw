@@ -51,13 +51,6 @@ export default class PropObject {
   _initDOM() {
     // Base
     this._propParentElement = findElementParentByClass(this.attachedElement, 'ir__prop')
-    if (this._propParentElement) {
-      this._propKNameContentElement = findElementChildByClass(
-        this._propParentElement,
-        'ir__prop-kname__content',
-      )
-      this._propKNameContentElement.append(this._placeholderElement)
-    }
     this.attachedElement.classList.add('ir__prop-object')
     this._propWrapperElement = document.createElement('div')
     this._propWrapperElement.classList.add('ir__prop-wrapper')
@@ -98,32 +91,10 @@ export default class PropObject {
     // Main DOM building
     this.attachedElement.appendChild(this._propWrapperElement)
     this.attachedElement.appendChild(rowActionsElement)
-    // -- Processing: "blank" state
-    if (Object.keys(this.$value).length) {
-      this._blankValueElement.remove()
-    } else {
-      this.attachedElement.appendChild(this._blankValueElement)
-    }
-    
-    if (this._propParentElement) {
-      // -- Processing: "open" state
-      if (this.state.open) {
-        this._propParentElement.classList.add('ir__prop--open')
-      } else {
-        this._propParentElement.classList.remove('ir__prop--open')
-      }
-    }
   }
 
   _computeDOM() {
     this._propParentElement = findElementParentByClass(this.attachedElement, 'ir__prop')
-    if (this._propParentElement) {
-      this._propKNameContentElement = findElementChildByClass(
-        this._propParentElement,
-        'ir__prop-kname__content',
-      )
-      this._propKNameContentElement.append(this._placeholderElement)
-    }
     // Processing: values
     for (const [propKey, propValue] of Object.entries(this.$value)) {
       if (!this._hasDOMPropKey(propKey)) {
@@ -140,8 +111,16 @@ export default class PropObject {
             break
         }
         propElement.classList.add('ir__prop')
-        if (['object', 'array'].includes(propValue.propType) && propValue.state.open) {
-          propElement.classList.add('ir__prop--open')
+        if (['object', 'array'].includes(propValue.propType)) {
+          // DOM
+          // console.log(findElementChildByClass(propElement, 'ir__prop-kname__content'));
+          const propKNameBoxContentElement = findElementChildByClass(propElement, 'ir__prop-kname__content')
+          console.log(propKNameBoxContentElement);
+          propKNameBoxContentElement.append(this._placeholderElement)
+          // -- "open" state
+          if (propValue.state.open) {
+            propElement.classList.add('ir__prop--open')
+          }
         }
         propElement.setAttribute('data-ir-prop-key', propKey)
         this._propWrapperElement.appendChild(propElement)

@@ -18,13 +18,18 @@ export const getElementChildByClass = (element, cssClass) => {
 }
 
 export const findElementChildByClass = (element, cssClass) => {
+  let found = null
   for (const child of element.children) {
     if (child.classList.contains(cssClass)) {
-      return child
-    } else if (child.children.length) {
-      return findElementChildByClass(child, cssClass)
-    }
+      found = child
+    }/*  else if (!found && child.children.length) {
+      found = findElementChildByClass(child, cssClass)
+    } */
   }
+  // if (!found) {
+  //   found = 
+  // }
+  return found
 }
 
 export const findElementParentByClass = (element, ccsClass) => {
