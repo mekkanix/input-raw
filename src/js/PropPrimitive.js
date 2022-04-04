@@ -13,17 +13,28 @@ export default class PropPrimitive {
     date: 't-date',
   }
   attachedElement = document.createElement('div')
+  mounted = false
   propType = 'primitive'
   valueType = null
-  value = null
+  $value = null
+  // state = {
+  //   initialized: false,
+  //   editing: false,
+  //   editable: false,
+  //   errored: false,
+  //   toObject: false,
+  //   toArray: false,
+  //   open: true,
+  // }
   fmtValue = null
 
   constructor(value) {
-    this.value = value
+    this.$value = value
     this.valueType = this._getFmtTypeFromValue(value)
     this.fmtValue = formatPrimitiveValueToCode(value, this.valueType)
     this._initDOM()
-    this._updateDOM()
+    this._computeDOM()
+    this.mounted = true
   }
 
   _initDOM() {
@@ -31,7 +42,7 @@ export default class PropPrimitive {
     this.attachedElement.classList.add('ir__primitive-value')
   }
 
-  _updateDOM() {
+  _computeDOM() {
     // CSS Class
     this._updateAttachedElementTypeClass()
     // Value
@@ -58,7 +69,7 @@ export default class PropPrimitive {
   }
 
   setValue(value) {
-    this.value = value
+    this.$value = value
     this.valueType = this._getFmtTypeFromValue(value)
     this.fmtValue = formatPrimitiveValueToCode(value, this.valueType)
     this._updateDOM()
