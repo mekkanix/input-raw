@@ -55,16 +55,12 @@ export default class PropObject {
     this._propParentElement = findElementParentByClass(this.attachedElement, 'ir__prop')
     this._propWrapperElement = document.createElement('div')
     this._propWrapperElement.classList.add('ir__prop-wrapper')
-    // this._placeholderElement = document.createElement('div')
-    // this._placeholderElement.classList.add('ir__prop-object__placeholder')
     const placeholderText = document.createElement('div')
     placeholderText.classList.add('ir__prop-object__placeholder-text')
     placeholderText.innerHTML = 'Object'
     const placeholderIcn = document.createElement('div')
     placeholderIcn.classList.add('ir__prop-object__placeholder-icn')
     placeholderIcn.innerHTML = '{&hellip;}'
-    // this._placeholderElement.append(placeholderText)
-    // this._placeholderElement.append(placeholderIcn)
     this._blankValueElement = document.createElement('div')
     this._blankValueElement.classList.add('ir__prop-object__blank')
     this._blankValueElement.innerHTML = '(empty)'
@@ -195,6 +191,7 @@ export default class PropObject {
     placeholderIcn.innerHTML = '{&hellip;}'
     placeholderElement.append(placeholderText)
     placeholderElement.append(placeholderIcn)
+    objectValue.setPlaceholderElement(placeholderElement)
     // -- DOM building
     propKeyNameElement.appendChild(keyNameColonElement)
     knameContentElement.appendChild(nameIcnElement)
@@ -272,5 +269,9 @@ export default class PropObject {
       this.state[state] = value
       this._computeDOM()
     }
+  }
+
+  setPlaceholderElement(element) {
+    this._placeholderElement = element || null
   }
 }

@@ -65,6 +65,7 @@ export default class InputRaw {
     propObject.$value.test.setProp('titi', new PropObject())
     propObject.$value.test.setProp('tutu', new PropObject())
     propObject.$value.test.setProp('tete', new PropObject())
+    propObject.$value.test.$value.tete.setProp('yup', new PropObject())
     // propObject.setProp('test2', new PropObject())
     // propObject.$value.test2.setProp('toto', new PropPrimitive(true))
     // propObject.$value.test2.setProp('tata', new PropPrimitive('Bonjour'))
