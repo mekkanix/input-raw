@@ -47,7 +47,6 @@ export default class PropObject {
     }
     this._initDOM()
     this._computeDOM()
-    this.mounted = true
   }
 
   _initDOM() {
@@ -94,6 +93,7 @@ export default class PropObject {
     // Main DOM building
     this.attachedElement.appendChild(this._propWrapperElement)
     this.attachedElement.appendChild(rowActionsElement)
+    this.mounted = true
   }
 
   _computeDOM() {
@@ -103,6 +103,8 @@ export default class PropObject {
     }
     // Processing: values
     for (const [propKey, propValue] of Object.entries(this.$value)) {
+      console.log(propValue, propValue.mounted);
+
       let propElement = null
       switch (propValue.propType) {
         case 'object':
