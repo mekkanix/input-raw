@@ -28,7 +28,6 @@ export default class PropObject {
   _propKNameContentElement = null
   _propWrapperElement = null
   _placeholderElement = null
-  mounted = false
   propType = 'object'
   $value = {}
   state = {
@@ -56,16 +55,16 @@ export default class PropObject {
     this._propParentElement = findElementParentByClass(this.attachedElement, 'ir__prop')
     this._propWrapperElement = document.createElement('div')
     this._propWrapperElement.classList.add('ir__prop-wrapper')
-    this._placeholderElement = document.createElement('div')
-    this._placeholderElement.classList.add('ir__prop-object__placeholder')
+    // this._placeholderElement = document.createElement('div')
+    // this._placeholderElement.classList.add('ir__prop-object__placeholder')
     const placeholderText = document.createElement('div')
     placeholderText.classList.add('ir__prop-object__placeholder-text')
     placeholderText.innerHTML = 'Object'
     const placeholderIcn = document.createElement('div')
     placeholderIcn.classList.add('ir__prop-object__placeholder-icn')
     placeholderIcn.innerHTML = '{&hellip;}'
-    this._placeholderElement.append(placeholderText)
-    this._placeholderElement.append(placeholderIcn)
+    // this._placeholderElement.append(placeholderText)
+    // this._placeholderElement.append(placeholderIcn)
     this._blankValueElement = document.createElement('div')
     this._blankValueElement.classList.add('ir__prop-object__blank')
     this._blankValueElement.innerHTML = '(empty)'
@@ -93,7 +92,6 @@ export default class PropObject {
     // Main DOM building
     this.attachedElement.appendChild(this._propWrapperElement)
     this.attachedElement.appendChild(rowActionsElement)
-    this.mounted = true
   }
 
   _computeDOM() {
@@ -102,45 +100,45 @@ export default class PropObject {
       this._propParentElement = findElementParentByClass(this.attachedElement, 'ir__prop')
     }
     // Processing: values
-    for (const [propKey, propValue] of Object.entries(this.$value)) {
-      console.log(propValue, propValue.mounted);
-
-      let propElement = null
-      switch (propValue.propType) {
-        case 'object':
-            propElement = this._generateDOMPartObjectProp(propKey, propValue)
-            // if (propValue.state.open) {
-            //   propElement.classList.add('ir__prop--open')
-            // }
-          break
-        case 'array':
-            propElement = this._generateDOMPartArrayProp(propKey, propValue)
-            // if (propValue.state.open) {
-            //   propElement.classList.add('ir__prop--open')
-            // }
-          break
-        case 'primitive':
-            propElement = this._generateDOMPartPrimitiveProp(propKey, propValue)
-          break
+    for (const [chilPropKey, childPropValue] of Object.entries(this.$value)) {
+      if (!this._hasDOMPropKey(chilPropKey)) {
+        let childPropElement = null
+        switch (childPropValue.propType) {
+          case 'object':
+              childPropElement = this._generateDOMPartObjectProp(chilPropKey, childPropValue)
+              if (childPropValue.state.open) {
+                childPropElement.classList.add('ir__prop--open')
+              }
+            break
+          case 'array':
+              childPropElement = this._generateDOMPartArrayProp(chilPropKey, childPropValue)
+              if (childPropValue.state.open) {
+                childPropElement.classList.add('ir__prop--open')
+              }
+            break
+          case 'primitive':
+              childPropElement = this._generateDOMPartPrimitiveProp(chilPropKey, childPropValue)
+            break
+        }
+        childPropElement.classList.add('ir__prop')
+        childPropElement.setAttribute('data-ir-prop-key', chilPropKey)
+        this._propWrapperElement.appendChild(childPropElement)
       }
-      propElement.classList.add('ir__prop')
-      propElement.setAttribute('data-ir-prop-key', propKey)
-      this._propWrapperElement.appendChild(propElement)
     }
     // Processing: "blank" state
-    // if (Object.keys(this.$value).length) {
-    //   this._blankValueElement.remove()
-    // } else {
-    //   this.attachedElement.appendChild(this._blankValueElement)
-    // }
+    if (Object.keys(this.$value).length) {
+      this._blankValueElement.remove()
+    } else {
+      this.attachedElement.appendChild(this._blankValueElement)
+    }
     // Processing: "open" state
-    // if (this._propParentElement) {
-    //   if (this.state.open) {
-    //     this._propParentElement.classList.add('ir__prop--open')
-    //   } else {
-    //     this._propParentElement.classList.remove('ir__prop--open')
-    //   }
-    // }
+    if (this._propParentElement) {
+      if (this.state.open) {
+        this._propParentElement.classList.add('ir__prop--open')
+      } else {
+        this._propParentElement.classList.remove('ir__prop--open')
+      }
+    }
   }
 
   _hasDOMPropKey(key) {
@@ -186,11 +184,22 @@ export default class PropObject {
     const keyNameColonElement = document.createElement('div')
     keyNameColonElement.classList.add('ir__prop-kname__colon')
     keyNameColonElement.innerHTML = ':'
+    // -- Placeholder
+    const placeholderElement = document.createElement('div')
+    placeholderElement.classList.add('ir__prop-object__placeholder')
+    const placeholderText = document.createElement('div')
+    placeholderText.classList.add('ir__prop-object__placeholder-text')
+    placeholderText.innerHTML = 'Object'
+    const placeholderIcn = document.createElement('div')
+    placeholderIcn.classList.add('ir__prop-object__placeholder-icn')
+    placeholderIcn.innerHTML = '{&hellip;}'
+    placeholderElement.append(placeholderText)
+    placeholderElement.append(placeholderIcn)
     // -- DOM building
     propKeyNameElement.appendChild(keyNameColonElement)
     knameContentElement.appendChild(nameIcnElement)
     knameContentElement.appendChild(propKeyNameElement)
-    knameContentElement.append(this._placeholderElement)
+    knameContentElement.append(placeholderElement)
     nameElement.appendChild(knameContentElement)
 
     // Building: prop value
