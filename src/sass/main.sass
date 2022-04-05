@@ -30,25 +30,19 @@
       &:hover .ir__prop-object-actions
         display: flex
 
-      // &.open > .ir__prop-kname__content > .ir__prop-kname__icn
-      //   transform: rotate(90deg)
-
       .ir__prop-kname__content
         display: flex
         align-items: center
-
-        // &.opening-disabled .ir__prop-kname__icn
-        //   color: #aaa
 
         .ir__prop-kname__icn
           position: absolute
           left: 4px
           top: 3px
-        .ir__prop-object-kname
+        .ir__prop-kname
           display: flex
           padding-left: 15px
           font-size: 14px
-        .ir__prop-object__placeholder
+        .ir__prop__placeholder
           display: flex
           position: relative
           top: 1px
@@ -57,25 +51,28 @@
           color: #909090
           font-weight: 500
           letter-spacing: 0.5px
-          .ir__prop-object__placeholder-text
+          .ir__prop__placeholder-text
             position: relative
             top: -1px
             color: #909090
             font-size: 14px
             font-weight: 700
-          .ir__prop-object__placeholder-icn
+          .ir__prop__placeholder-icn
             position: relative
-            top: 0
+            top: 1px
+
+        // &.opening-disabled .ir__prop-kname__icn
+        //   color: #aaa
 
     // -- Actions
     .ir__prop-actions,
-    .ir__prop-object__row-actions
+    .ir__prop__row-actions
       display: none
       padding-left: 10px
       align-items: center
       font-size: 11px
 
-      .ir__prop-object__action
+      .ir__prop__action
         width: 21px
         height: 21px
         flex: 0 0 21px
@@ -101,7 +98,7 @@
             top: -1px
 
     // -- Blank placeholder
-    .ir__prop-object__blank
+    .ir__prop__blank
       padding: 1px 0 1px 15px
       font-size: 14px
       font-style: italic
@@ -115,17 +112,22 @@
       & > .ir__prop-kname-box
         .ir__prop-kname__icn
           transform: rotate(90deg)
-        .ir__prop-object__placeholder .ir__prop-object__placeholder-icn
+        .ir__prop__placeholder .ir__prop__placeholder-icn
           display: none
       & > .ir__prop-object--nested,
       & > .ir__prop-array--nested
         display: block
 
   // -- Object
-  // ...
+  .ir__prop-object
 
   // -- Array
-  // ...
+  .ir__prop-array
+    .ir__prop-kname-box .ir__prop-kname__content
+      .ir__prop-kname__idx
+        font-size: 14px
+        color: #1b1bff
+        margin-right: 5px
 
   // -- Primitive
   .ir__prop-primitive

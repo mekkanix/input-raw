@@ -3,10 +3,8 @@ import {
   toHtml,
 } from '@fortawesome/fontawesome-svg-core'
 import {
-  findElementChildByClass,
   findElementParentByClass,
 } from './helpers/DOM.js'
-import PropPrimitive from './PropPrimitive.js'
 
 export default class PropObject {
   _rowActions = [
@@ -56,21 +54,21 @@ export default class PropObject {
     this._propWrapperElement = document.createElement('div')
     this._propWrapperElement.classList.add('ir__prop-wrapper')
     const placeholderText = document.createElement('div')
-    placeholderText.classList.add('ir__prop-object__placeholder-text')
+    placeholderText.classList.add('ir__prop__placeholder-text')
     placeholderText.innerHTML = 'Object'
     const placeholderIcn = document.createElement('div')
-    placeholderIcn.classList.add('ir__prop-object__placeholder-icn')
+    placeholderIcn.classList.add('ir__prop__placeholder-icn')
     placeholderIcn.innerHTML = '{&hellip;}'
     this._blankValueElement = document.createElement('div')
-    this._blankValueElement.classList.add('ir__prop-object__blank')
+    this._blankValueElement.classList.add('ir__prop__blank')
     this._blankValueElement.innerHTML = '(empty)'
     // Row actions
     const rowActionsElement = document.createElement('div')
-    rowActionsElement.classList.add('ir__prop-object__row-actions')
+    rowActionsElement.classList.add('ir__prop__row-actions')
     for (const rowAction of this._rowActions) {
       const rowActionElement = document.createElement('div')
-      rowActionElement.classList.add('ir__prop-object__row-action')
-      rowActionElement.classList.add('ir__prop-object__action')
+      rowActionElement.classList.add('ir__prop__row-action')
+      rowActionElement.classList.add('ir__prop__action')
       for (const cssClass of rowAction.classes) {
         rowActionElement.classList.add(cssClass)
       }
@@ -175,19 +173,19 @@ export default class PropObject {
     nameIcnElement.innerHTML = icnHTML
     // -- Text
     const propKeyNameElement = document.createElement('div')
-    propKeyNameElement.classList.add('ir__prop-object-kname')
+    propKeyNameElement.classList.add('ir__prop-kname')
     propKeyNameElement.innerHTML = key
     const keyNameColonElement = document.createElement('div')
     keyNameColonElement.classList.add('ir__prop-kname__colon')
     keyNameColonElement.innerHTML = ':'
     // -- Placeholder
     const placeholderElement = document.createElement('div')
-    placeholderElement.classList.add('ir__prop-object__placeholder')
+    placeholderElement.classList.add('ir__prop__placeholder')
     const placeholderText = document.createElement('div')
-    placeholderText.classList.add('ir__prop-object__placeholder-text')
+    placeholderText.classList.add('ir__prop__placeholder-text')
     placeholderText.innerHTML = 'Object'
     const placeholderIcn = document.createElement('div')
-    placeholderIcn.classList.add('ir__prop-object__placeholder-icn')
+    placeholderIcn.classList.add('ir__prop__placeholder-icn')
     placeholderIcn.innerHTML = '{&hellip;}'
     placeholderElement.append(placeholderText)
     placeholderElement.append(placeholderIcn)
@@ -209,8 +207,55 @@ export default class PropObject {
   }
 
   _generateDOMPartArrayProp(key, arrayValue) {
-    console.log(key, arrayValue);
-    return
+    // Building: main wrapper
+    const element = document.createElement('div')
+    element.classList.add('ir__prop-subarray')
+
+    // Building: prop key
+    const nameElement = document.createElement('div')
+    nameElement.classList.add('ir__prop-kname-box')
+    nameElement.addEventListener('click', this._onKNameBoxClick.bind(this))
+    const knameContentElement = document.createElement('div')
+    knameContentElement.classList.add('ir__prop-kname__content')
+    // -- Icon
+    const nameIcnElement = document.createElement('div')
+    nameIcnElement.classList.add('ir__prop-kname__icn')
+    const icn = icon({ prefix: 'fas', iconName: 'caret-right', })
+    const icnHTML = toHtml(icn.abstract[0])
+    nameIcnElement.innerHTML = icnHTML
+    // -- Text
+    const propKeyNameElement = document.createElement('div')
+    propKeyNameElement.classList.add('ir__prop-kname')
+    propKeyNameElement.innerHTML = key
+    const keyNameColonElement = document.createElement('div')
+    keyNameColonElement.classList.add('ir__prop-kname__colon')
+    keyNameColonElement.innerHTML = ':'
+    // -- Placeholder
+    const placeholderElement = document.createElement('div')
+    placeholderElement.classList.add('ir__prop__placeholder')
+    const placeholderText = document.createElement('div')
+    placeholderText.classList.add('ir__prop__placeholder-text')
+    placeholderText.innerHTML = 'Array'
+    const placeholderIcn = document.createElement('div')
+    placeholderIcn.classList.add('ir__prop__placeholder-icn')
+    placeholderIcn.innerHTML = '[&hellip;]'
+    placeholderElement.append(placeholderText)
+    placeholderElement.append(placeholderIcn)
+    arrayValue.setPlaceholderElement(placeholderElement)
+    // -- DOM building
+    propKeyNameElement.appendChild(keyNameColonElement)
+    knameContentElement.appendChild(nameIcnElement)
+    knameContentElement.appendChild(propKeyNameElement)
+    knameContentElement.append(placeholderElement)
+    nameElement.appendChild(knameContentElement)
+
+    // Building: prop value
+    arrayValue.attachedElement.classList.add('ir__prop-array--nested')
+
+    // Main DOM building
+    element.appendChild(nameElement)
+    element.appendChild(arrayValue.attachedElement)
+    return element
   }
 
   _generateDOMPartPrimitiveProp(key, primitiveValue) {
