@@ -61,7 +61,10 @@ export default class InputRaw {
     const propObject = new PropObject()
     propObject.setProp('test', new PropObject())
     propObject.setProp('test2', new PropArray())
-    // propObject.$value.test2.addProp(new PropPrimitive(true))
+    propObject.$value.test2.addProp(new PropPrimitive(true))
+    propObject.$value.test2.addProp(new PropPrimitive(123))
+    propObject.$value.test2.addProp(new PropObject())
+    propObject.$value.test2.addProp(new PropArray())
     console.log(propObject);
     this.tree = propObject
     this.rootElement.appendChild(propObject.attachedElement)

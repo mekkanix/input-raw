@@ -176,25 +176,25 @@ export default class PropArray {
     const propKeyIdxElement = document.createElement('div')
     propKeyIdxElement.classList.add('ir__prop-kname__idx')
     propKeyIdxElement.innerHTML = index
-    const keyNameColonElement = document.createElement('div')
-    keyNameColonElement.classList.add('ir__prop-kname__colon')
-    keyNameColonElement.innerHTML = ':'
+    const idxColonElement = document.createElement('div')
+    idxColonElement.classList.add('ir__prop-kname__colon')
+    idxColonElement.innerHTML = ':'
     // -- Placeholder
     const placeholderElement = document.createElement('div')
-    placeholderElement.classList.add('ir__prop-array__placeholder')
+    placeholderElement.classList.add('ir__prop__placeholder')
     const placeholderText = document.createElement('div')
-    placeholderText.classList.add('ir__prop-array__placeholder-text')
+    placeholderText.classList.add('ir__prop__placeholder-text')
     placeholderText.innerHTML = 'Object'
     const placeholderIcn = document.createElement('div')
-    placeholderIcn.classList.add('ir__prop-array__placeholder-icn')
+    placeholderIcn.classList.add('ir__prop__placeholder-icn')
     placeholderIcn.innerHTML = '{&hellip;}'
     placeholderElement.append(placeholderText)
     placeholderElement.append(placeholderIcn)
     objectValue.setPlaceholderElement(placeholderElement)
     // -- DOM building
-    propKeyNameElement.appendChild(keyNameColonElement)
+    propKeyIdxElement.appendChild(idxColonElement)
     knameContentElement.appendChild(nameIcnElement)
-    knameContentElement.appendChild(propKeyNameElement)
+    knameContentElement.appendChild(propKeyIdxElement)
     knameContentElement.append(placeholderElement)
     nameElement.appendChild(knameContentElement)
 
@@ -207,7 +207,7 @@ export default class PropArray {
     return element
   }
 
-  _generateDOMPartArrayProp(key, arrayValue) {
+  _generateDOMPartArrayProp(index, arrayValue) {
     // Building: main wrapper
     const element = document.createElement('div')
     element.classList.add('ir__prop-subarray')
@@ -225,12 +225,12 @@ export default class PropArray {
     const icnHTML = toHtml(icn.abstract[0])
     nameIcnElement.innerHTML = icnHTML
     // -- Text
-    const propKeyNameElement = document.createElement('div')
-    propKeyNameElement.classList.add('ir__prop-object-kname')
-    propKeyNameElement.innerHTML = key
-    const keyNameColonElement = document.createElement('div')
-    keyNameColonElement.classList.add('ir__prop-kname__colon')
-    keyNameColonElement.innerHTML = ':'
+    const propKeyIdxElement = document.createElement('div')
+    propKeyIdxElement.classList.add('ir__prop-kname__idx')
+    propKeyIdxElement.innerHTML = index
+    const idxColonElement = document.createElement('div')
+    idxColonElement.classList.add('ir__prop-kname__colon')
+    idxColonElement.innerHTML = ':'
     // -- Placeholder
     const placeholderElement = document.createElement('div')
     placeholderElement.classList.add('ir__prop-array__placeholder')
@@ -244,9 +244,9 @@ export default class PropArray {
     placeholderElement.append(placeholderIcn)
     arrayValue.setPlaceholderElement(placeholderElement)
     // -- DOM building
-    propKeyNameElement.appendChild(keyNameColonElement)
+    propKeyIdxElement.appendChild(idxColonElement)
+    knameContentElement.appendChild(propKeyIdxElement)
     knameContentElement.appendChild(nameIcnElement)
-    knameContentElement.appendChild(propKeyNameElement)
     knameContentElement.append(placeholderElement)
     nameElement.appendChild(knameContentElement)
 
@@ -263,20 +263,27 @@ export default class PropArray {
     // Building: prop "box"
     const element = document.createElement('div')
     element.classList.add('ir__prop-primitive')
-    // Building: prop key
-    const nameElement = document.createElement('div')
-    nameElement.classList.add('ir__prop-name')
-    nameElement.innerHTML = key
-    const keyNameColonElement = document.createElement('div')
-    keyNameColonElement.classList.add('ir__prop-kname__colon')
-    keyNameColonElement.innerHTML = ':'
-    nameElement.appendChild(keyNameColonElement)
+    // Building: prop index
+    const kNameBoxElement = document.createElement('div')
+    kNameBoxElement.classList.add('ir__prop-kname-box')
+    const keyNameContentElement = document.createElement('div')
+    keyNameContentElement.classList.add('ir__prop-kname__content')
+    const idxElement = document.createElement('div')
+    idxElement.classList.add('ir__prop-kname__idx')
+    idxElement.innerHTML = key
+    const idxColonElement = document.createElement('div')
+    idxColonElement.classList.add('ir__prop-kname__colon')
+    idxColonElement.innerHTML = ':'
+    keyNameContentElement.append(idxElement)
+    keyNameContentElement.append(idxColonElement)
+    kNameBoxElement.append(keyNameContentElement)
+    // nameElement.appendChild(keyNameColonElement)
     // Building: prop value
     const valueElement = document.createElement('div')
     valueElement.classList.add('ir__prop-value')
     valueElement.appendChild(primitiveValue.attachedElement)
     // Main DOM building
-    element.appendChild(nameElement)
+    element.appendChild(kNameBoxElement)
     element.appendChild(valueElement)
     return element
   }
