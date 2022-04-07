@@ -167,11 +167,11 @@ export default class PropArray {
     const knameContentElement = document.createElement('div')
     knameContentElement.classList.add('ir__prop-kname__content')
     // -- Icon
-    const nameIcnElement = document.createElement('div')
-    nameIcnElement.classList.add('ir__prop-kname__icn')
+    const keyIcnElement = document.createElement('div')
+    keyIcnElement.classList.add('ir__prop-kname__icn')
     const icn = icon({ prefix: 'fas', iconName: 'caret-right', })
     const icnHTML = toHtml(icn.abstract[0])
-    nameIcnElement.innerHTML = icnHTML
+    keyIcnElement.innerHTML = icnHTML
     // -- Text
     const propKeyIdxElement = document.createElement('div')
     propKeyIdxElement.classList.add('ir__prop-kname__idx')
@@ -192,9 +192,9 @@ export default class PropArray {
     placeholderElement.append(placeholderIcn)
     objectValue.setPlaceholderElement(placeholderElement)
     // -- DOM building
-    propKeyIdxElement.appendChild(idxColonElement)
-    knameContentElement.appendChild(nameIcnElement)
     knameContentElement.appendChild(propKeyIdxElement)
+    knameContentElement.appendChild(idxColonElement)
+    knameContentElement.appendChild(keyIcnElement)
     knameContentElement.append(placeholderElement)
     nameElement.appendChild(knameContentElement)
 
@@ -219,11 +219,11 @@ export default class PropArray {
     const knameContentElement = document.createElement('div')
     knameContentElement.classList.add('ir__prop-kname__content')
     // -- Icon
-    const nameIcnElement = document.createElement('div')
-    nameIcnElement.classList.add('ir__prop-kname__icn')
+    const keyIcnElement = document.createElement('div')
+    keyIcnElement.classList.add('ir__prop-kname__icn')
     const icn = icon({ prefix: 'fas', iconName: 'caret-right', })
     const icnHTML = toHtml(icn.abstract[0])
-    nameIcnElement.innerHTML = icnHTML
+    keyIcnElement.innerHTML = icnHTML
     // -- Text
     const propKeyIdxElement = document.createElement('div')
     propKeyIdxElement.classList.add('ir__prop-kname__idx')
@@ -233,20 +233,20 @@ export default class PropArray {
     idxColonElement.innerHTML = ':'
     // -- Placeholder
     const placeholderElement = document.createElement('div')
-    placeholderElement.classList.add('ir__prop-array__placeholder')
+    placeholderElement.classList.add('ir__prop__placeholder')
     const placeholderText = document.createElement('div')
-    placeholderText.classList.add('ir__prop-array__placeholder-text')
+    placeholderText.classList.add('ir__prop__placeholder-text')
     placeholderText.innerHTML = 'Array'
     const placeholderIcn = document.createElement('div')
-    placeholderIcn.classList.add('ir__prop-object__placeholder-icn')
+    placeholderIcn.classList.add('ir__prop__placeholder-icn')
     placeholderIcn.innerHTML = '[&hellip;]'
     placeholderElement.append(placeholderText)
     placeholderElement.append(placeholderIcn)
     arrayValue.setPlaceholderElement(placeholderElement)
     // -- DOM building
-    propKeyIdxElement.appendChild(idxColonElement)
     knameContentElement.appendChild(propKeyIdxElement)
-    knameContentElement.appendChild(nameIcnElement)
+    knameContentElement.appendChild(idxColonElement)
+    knameContentElement.appendChild(keyIcnElement)
     knameContentElement.append(placeholderElement)
     nameElement.appendChild(knameContentElement)
 
