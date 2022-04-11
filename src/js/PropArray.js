@@ -192,9 +192,9 @@ export default class PropArray {
     placeholderElement.append(placeholderIcn)
     objectValue.setPlaceholderElement(placeholderElement)
     // -- DOM building
-    knameContentElement.appendChild(keyIcnElement)
     knameContentElement.appendChild(propKeyIdxElement)
     knameContentElement.appendChild(idxColonElement)
+    knameContentElement.appendChild(keyIcnElement)
     knameContentElement.append(placeholderElement)
     nameElement.appendChild(knameContentElement)
 
