@@ -102,36 +102,35 @@ export default class PropToolbar {
     this._actions = actions
   }
 
-  // _computeActionsDOM() {
-  //   for (const action of this._actions) {
-  //     const enabled = action.enabled(this.state)
-  //     action.attachedElement.style.display = enabled ? 'block' : 'none'
-  //   }
-  // }
-
   computeDOM() {
-    // Prop toolbar
+    // Base handlers
     const enabled = !!this.targetElement
     if (enabled) {
-      console.log('----------------');
-      console.log(this.targetElement);
-      const targetAbsPos = this.targetElement.getBoundingClientRect()
-      const targetHeight = this.targetElement.clientHeight
-      const targetWidth = this.targetElement.clientWidth
-      const toolbarPosTop = targetAbsPos.y + targetHeight
-      const toolbarPosLeft = targetAbsPos.x + targetWidth
-      this.attachedElement.style.top = `${toolbarPosTop - 18}px`
-      this.attachedElement.style.left = `${toolbarPosLeft + 2}px`
-      // console.log(findElementParentByClass(this.targetElement, 'ir__prop-kname__content'));
-      // console.log(this.targetElement.clientWidth);
-      // console.log(this.targetElement.getBoundingClientRect());
+      this._handleEnabledState()
+    } else {
+      this._handleDisabledState()
     }
-    this.attachedElement.style.display = enabled ? 'block' : 'none'
     // Actions
     for (const action of this._actions) {
       const enabled = action.enabled(this.state)
       action.attachedElement.style.display = enabled ? 'block' : 'none'
     }
+  }
+
+  _handleEnabledState() {
+    // -- Positioning
+    const targetAbsPos = this.targetElement.getBoundingClientRect()
+    const targetHeight = this.targetElement.clientHeight
+    const targetWidth = this.targetElement.clientWidth
+    const toolbarPosTop = targetAbsPos.y + targetHeight
+    const toolbarPosLeft = targetAbsPos.x + targetWidth
+    this.attachedElement.style.top = `${toolbarPosTop - 18}px`
+    this.attachedElement.style.left = `${toolbarPosLeft + 2}px`
+    this.attachedElement.style.display = 'block'
+  }
+
+  _handleDisabledState() {
+    this.attachedElement.style.display = 'none'
   }
 
   _onEditClick(e) {

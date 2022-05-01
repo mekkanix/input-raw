@@ -64,30 +64,8 @@ export default class PropObject {
     this._blankValueElement = document.createElement('div')
     this._blankValueElement.classList.add('ir__prop__blank')
     this._blankValueElement.innerHTML = '(empty)'
-    // Row actions
-    // const rowActionsElement = document.createElement('div')
-    // rowActionsElement.classList.add('ir__prop__row-actions')
-    // for (const rowAction of this._rowActions) {
-    //   const rowActionElement = document.createElement('div')
-    //   rowActionElement.classList.add('ir__prop__row-action')
-    //   rowActionElement.classList.add('ir__prop__action')
-    //   for (const cssClass of rowAction.classes) {
-    //     rowActionElement.classList.add(cssClass)
-    //   }
-    //   let icnHTML = null
-    //   if (rowAction.icon) {
-    //     const icn = icon({ prefix: 'fas', iconName: rowAction.icon, })
-    //     icnHTML = toHtml(icn.abstract[0])
-    //   } else if (rowAction.text) {
-    //     icnHTML = rowAction.text
-    //   }
-    //   rowActionElement.innerHTML = icnHTML
-    //   rowActionsElement.appendChild(rowActionElement)
-    // }
-
     // Main DOM building
     this.attachedElement.appendChild(this._propWrapperElement)
-    // this.attachedElement.appendChild(rowActionsElement)
   }
 
   _computeDOM() {
@@ -319,8 +297,7 @@ export default class PropObject {
     this._propToolbar.setTargetElement(propElement)
   }
 
-  _onKNameBoxMouseOut(e) {
-    // const propElement = findElementParentByClass(e.target, 'ir__prop-kname-box')
+  _onKNameBoxMouseOut(_) {
     this._propToolbar.resetTargetElement()
   }
 
