@@ -19,6 +19,7 @@ export default class InputRaw {
   _autoMount = false
   tree = null
   rootElement = null
+  _propToolbar = null
 
   constructor(selector, config, autoMount = false) {
     this._initRootElement(selector)
@@ -52,20 +53,24 @@ export default class InputRaw {
   }
 
   _initPropToolbar() {
-    const toolbar = new PropToolbar()
-    toolbar.updateState('initialized', true)
+    this._propToolbar = new PropToolbar(/* this.rootElement */)
+    // toolbar.updateState('initialized', true)
     // this.rootElement.appendChild(toolbar.attachedElement)
   }
 
   _initDefaultState() {
-    const propObject = new PropObject()
-    propObject.setProp('test', new PropObject())
-    propObject.setProp('test2', new PropArray())
-    propObject.$value.test2.addProp(new PropPrimitive(true))
-    propObject.$value.test2.addProp(new PropPrimitive(123))
-    propObject.$value.test2.addProp(new PropObject())
-    propObject.$value.test2.addProp(new PropArray())
-    propObject.$value.test2.$value[3].addProp(new PropArray())
+    const pt = this._propToolbar
+    const propObject = new PropObject(pt)
+    propObject.setProp('test', new PropObject(pt))
+    propObject.$value.test.setProp('test1_1', new PropPrimitive(pt, false))
+    propObject.$value.test.setProp('test1_2', new PropPrimitive(pt, 123))
+    propObject.$value.test.setProp('test1_3', new PropArray(pt))
+    propObject.setProp('test2', new PropArray(pt))
+    propObject.$value.test2.addProp(new PropPrimitive(pt, true))
+    propObject.$value.test2.addProp(new PropPrimitive(pt, 456))
+    propObject.$value.test2.addProp(new PropObject(pt))
+    propObject.$value.test2.addProp(new PropArray(pt))
+    propObject.$value.test2.$value[3].addProp(new PropArray(pt))
     console.log(propObject);
     this.tree = propObject
     this.rootElement.appendChild(propObject.attachedElement)
@@ -76,7 +81,7 @@ export default class InputRaw {
       this._initRootElement(selector)
     }
     this._initDependencies()
-    this._initDefaultState()
     this._initPropToolbar()
+    this._initDefaultState()
   }
 }

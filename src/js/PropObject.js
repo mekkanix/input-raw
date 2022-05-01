@@ -26,6 +26,7 @@ export default class PropObject {
   _propKNameContentElement = null
   _propWrapperElement = null
   _placeholderElement = null
+  _propToolbar = null
   propType = 'object'
   $value = {}
   state = {
@@ -38,7 +39,8 @@ export default class PropObject {
     open: true,
   }
 
-  constructor(value = null) {
+  constructor(propToolbar, value = null) {
+    this._propToolbar = propToolbar
     if (value) {
       this.$value = value
     }
@@ -63,29 +65,29 @@ export default class PropObject {
     this._blankValueElement.classList.add('ir__prop__blank')
     this._blankValueElement.innerHTML = '(empty)'
     // Row actions
-    const rowActionsElement = document.createElement('div')
-    rowActionsElement.classList.add('ir__prop__row-actions')
-    for (const rowAction of this._rowActions) {
-      const rowActionElement = document.createElement('div')
-      rowActionElement.classList.add('ir__prop__row-action')
-      rowActionElement.classList.add('ir__prop__action')
-      for (const cssClass of rowAction.classes) {
-        rowActionElement.classList.add(cssClass)
-      }
-      let icnHTML = null
-      if (rowAction.icon) {
-        const icn = icon({ prefix: 'fas', iconName: rowAction.icon, })
-        icnHTML = toHtml(icn.abstract[0])
-      } else if (rowAction.text) {
-        icnHTML = rowAction.text
-      }
-      rowActionElement.innerHTML = icnHTML
-      rowActionsElement.appendChild(rowActionElement)
-    }
+    // const rowActionsElement = document.createElement('div')
+    // rowActionsElement.classList.add('ir__prop__row-actions')
+    // for (const rowAction of this._rowActions) {
+    //   const rowActionElement = document.createElement('div')
+    //   rowActionElement.classList.add('ir__prop__row-action')
+    //   rowActionElement.classList.add('ir__prop__action')
+    //   for (const cssClass of rowAction.classes) {
+    //     rowActionElement.classList.add(cssClass)
+    //   }
+    //   let icnHTML = null
+    //   if (rowAction.icon) {
+    //     const icn = icon({ prefix: 'fas', iconName: rowAction.icon, })
+    //     icnHTML = toHtml(icn.abstract[0])
+    //   } else if (rowAction.text) {
+    //     icnHTML = rowAction.text
+    //   }
+    //   rowActionElement.innerHTML = icnHTML
+    //   rowActionsElement.appendChild(rowActionElement)
+    // }
 
     // Main DOM building
     this.attachedElement.appendChild(this._propWrapperElement)
-    this.attachedElement.appendChild(rowActionsElement)
+    // this.attachedElement.appendChild(rowActionsElement)
   }
 
   _computeDOM() {
@@ -162,7 +164,19 @@ export default class PropObject {
     // Building: prop key
     const nameElement = document.createElement('div')
     nameElement.classList.add('ir__prop-kname-box')
-    nameElement.addEventListener('click', this._onKNameBoxClick.bind(this))
+    // -- Events
+    nameElement.addEventListener(
+      'click',
+      this._onKNameBoxClick.bind(this)
+    )
+    nameElement.addEventListener(
+      'mouseover',
+      this._onKNameBoxMouseOver.bind(this)
+    )
+    nameElement.addEventListener(
+      'mouseout',
+      this._onKNameBoxMouseOut.bind(this)
+    )
     const knameContentElement = document.createElement('div')
     knameContentElement.classList.add('ir__prop-kname__content')
     // -- Icon
@@ -214,7 +228,19 @@ export default class PropObject {
     // Building: prop key
     const nameElement = document.createElement('div')
     nameElement.classList.add('ir__prop-kname-box')
-    nameElement.addEventListener('click', this._onKNameBoxClick.bind(this))
+    // -- Events
+    nameElement.addEventListener(
+      'click',
+      this._onKNameBoxClick.bind(this)
+    )
+    nameElement.addEventListener(
+      'mouseover',
+      this._onKNameBoxMouseOver.bind(this)
+    )
+    nameElement.addEventListener(
+      'mouseout',
+      this._onKNameBoxMouseOut.bind(this)
+    )
     const knameContentElement = document.createElement('div')
     knameContentElement.classList.add('ir__prop-kname__content')
     // -- Icon
@@ -281,11 +307,21 @@ export default class PropObject {
   }
 
   _onKNameBoxClick(e) {
-    // const kNameBoxElement = findElementParentByClass(e.target, 'ir__prop-kname-box')
     const propElement = findElementParentByClass(e.target, 'ir__prop')
     const propKeyName = propElement.getAttribute('data-ir-prop-key')
     const prop = this._getPropByKey(propKeyName)
     prop.updateState('open', !prop.state.open)
+    this._propToolbar.computeDOM()
+  }
+
+  _onKNameBoxMouseOver(e) {
+    const propElement = findElementParentByClass(e.target, 'ir__prop-kname__content')
+    this._propToolbar.setTargetElement(propElement)
+  }
+
+  _onKNameBoxMouseOut(e) {
+    // const propElement = findElementParentByClass(e.target, 'ir__prop-kname-box')
+    this._propToolbar.resetTargetElement()
   }
 
   setProp(key, value) {

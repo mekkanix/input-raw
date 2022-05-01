@@ -13,6 +13,7 @@ export default class PropPrimitive {
     date: 't-date',
   }
   attachedElement = document.createElement('div')
+  _propToolbar = null
   mounted = false
   propType = 'primitive'
   valueType = null
@@ -28,7 +29,8 @@ export default class PropPrimitive {
   // }
   fmtValue = null
 
-  constructor(value) {
+  constructor(propToolbar, value) {
+    this._propToolbar = propToolbar
     this.$value = value
     this.valueType = this._getFmtTypeFromValue(value)
     this.fmtValue = formatPrimitiveValueToCode(value, this.valueType)
