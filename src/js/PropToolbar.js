@@ -8,8 +8,10 @@ import {
 
 export default class PropToolbar {
   _actions = []
+  _rootElement = null
   attachedElement = document.createElement('div')
   targetElement = null
+  _hovering = false
   state = {
     initialized: false,
     editing: false,
@@ -19,38 +21,11 @@ export default class PropToolbar {
     toArray: false,
   }
 
-  constructor() {
+  constructor(rootElement) {
     this._initActions()
+    this._initRootElement(rootElement)
     this._initDOM()
     this.computeDOM()
-  }
-
-  _initDOM() {
-    // Base
-    this.attachedElement.classList.add('ir__prop-toolbar')
-    this.attachedElement.style.display = 'none'
-    // Actions
-    const actionsElement = document.createElement('div')
-    actionsElement.classList.add('ir__prop-toolbar__actions')
-    this._actions.map(action => {
-      const actionElement = document.createElement('div')
-      actionElement.classList.add('ir__prop-toolbar__action')
-      actionElement.classList.add(action.class)
-      actionElement.addEventListener('click', action.eventHandler)
-      let icnHTML = null
-      if (action.icon) {
-        const icn = icon({ prefix: 'fas', iconName: action.icon, })
-        icnHTML = toHtml(icn.abstract[0])
-      } else if (action.text) {
-        icnHTML = action.text
-      }
-      actionElement.innerHTML = icnHTML
-      action.attachedElement = actionElement
-      actionsElement.appendChild(actionElement)
-    })
-    this.attachedElement.appendChild(actionsElement)
-    // DOM mounting
-    document.body.appendChild(this.attachedElement)
   }
 
   _initActions() {
@@ -102,6 +77,59 @@ export default class PropToolbar {
     this._actions = actions
   }
 
+  _initRootElement(element) {
+    this._rootElement = element
+  }
+
+  _initDOM() {
+    // Base
+    this.attachedElement.classList.add('ir__prop-toolbar')
+    this.attachedElement.style.display = 'none'
+    this.attachedElement.addEventListener('mouseover', (e) => {
+      console.log('PT over');
+      this._hovering = true
+      // const pt = findElementParentByClass(e.target, 'ir__prop-toolbar')
+      // this.setTargetElement(pt)
+    })
+    this.attachedElement.addEventListener('mouseout', (e) => {
+      console.log(this._hovering, this.targetElement);
+      // console.log(this.targetElement);
+      // console.log(e.target.classList, e.target.classList.contains('ir__prop-toolbar'));
+      // console.log(pt);
+      // if (!e.target.classList.contains('ir__prop-toolbar') && !pt) {
+      //   this._hovering = false
+      //   console.log('PT out');
+      // }
+      // this._hovering = false
+      // const pt = findElementParentByClass(e.target, 'ir__prop-toolbar')
+      // if (!pt) {
+      //   this.resetTargetElement()
+      // }
+    })
+    // Actions
+    const actionsElement = document.createElement('div')
+    actionsElement.classList.add('ir__prop-toolbar__actions')
+    this._actions.map(action => {
+      const actionElement = document.createElement('div')
+      actionElement.classList.add('ir__prop-toolbar__action')
+      actionElement.classList.add(action.class)
+      actionElement.addEventListener('click', action.eventHandler)
+      let icnHTML = null
+      if (action.icon) {
+        const icn = icon({ prefix: 'fas', iconName: action.icon, })
+        icnHTML = toHtml(icn.abstract[0])
+      } else if (action.text) {
+        icnHTML = action.text
+      }
+      actionElement.innerHTML = icnHTML
+      action.attachedElement = actionElement
+      actionsElement.appendChild(actionElement)
+    })
+    this.attachedElement.appendChild(actionsElement)
+    // DOM mounting
+    this._rootElement.appendChild(this.attachedElement)
+  }
+
   computeDOM() {
     // Base handlers
     const enabled = !!this.targetElement
@@ -113,7 +141,7 @@ export default class PropToolbar {
     // Actions
     for (const action of this._actions) {
       const enabled = action.enabled(this.state)
-      action.attachedElement.style.display = enabled ? 'block' : 'none'
+      action.attachedElement.style.display = enabled ? 'flex' : 'none'
     }
   }
 
@@ -125,7 +153,7 @@ export default class PropToolbar {
     const toolbarPosTop = targetAbsPos.y + targetHeight
     const toolbarPosLeft = targetAbsPos.x + targetWidth
     this.attachedElement.style.top = `${toolbarPosTop - 18}px`
-    this.attachedElement.style.left = `${toolbarPosLeft + 2}px`
+    this.attachedElement.style.left = `${toolbarPosLeft - 2}px`
     this.attachedElement.style.display = 'block'
   }
 
@@ -158,13 +186,26 @@ export default class PropToolbar {
   }
 
   setTargetElement(element) {
-    this.targetElement = element
-    this.computeDOM()
+    if (!element) {
+      this._hovering = false
+    }
+    if (!this._hovering) {
+      this.targetElement = element
+      this.computeDOM()
+    }
   }
 
   resetTargetElement() {
     this.targetElement = null
     this.computeDOM()
+  }
+
+  applyTargetElementReset() {
+    // console.log(this._hovering);
+    // if (!this._hovering) {
+    //   this.targetElement = null
+    //   this.computeDOM()
+    // }
   }
 
   updateState(prop, value) {

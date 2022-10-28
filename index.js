@@ -5,13 +5,14 @@ const getFormattedConfig = (config) => {
   return {}
 }
 
-// Entrypoint
+// Entrypoint (lib. interface)
 
-let inputRaw = null
+// let inputRaw = null
 function InputRawLib(selector, config = null) {
   let initError = false
   let selectorAsConfig = false
-  if (!config) {
+  let inputRaw = null
+  if (typeof selector === 'object' && !config) {
     selectorAsConfig = true
     if (typeof selector !== 'object') {
       console.error('[InputRaw] You must specify a configuration object.')
@@ -43,13 +44,25 @@ function InputRawLib(selector, config = null) {
     )
   }
 
+  // Public API
+
+  // WARNING: To avoid performance issues when the user creates a big
+  // amount of IR instances, only the last IR instance created is
+  // stored in the `inputRaw` local var., by replacing the old ones,
+  // meaning that it's not possible for Public API's methods & props
+  // to interact with old IR instances in that case.
+
+  InputRawLib.mount = (selector) => {
+    inputRaw.init(selector)
+  }
+
   return InputRawLib
 }
 
 // Public API
 
-InputRawLib.mount = function(selector) {
-  inputRaw.init(selector)
-}
+// InputRawLib.mount = function(selector) {
+//   inputRaw.init(selector)
+// }
 
 export default InputRawLib

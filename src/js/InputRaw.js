@@ -38,7 +38,7 @@ export default class InputRaw {
     const element = document.querySelector(selector)
     if (element) {
       this.rootElement = element
-      this.rootElement.classList.add('input-raw')
+      this.rootElement.classList.add('ir-root')
     }
   }
 
@@ -53,9 +53,9 @@ export default class InputRaw {
   }
 
   _initPropToolbar() {
-    this._propToolbar = new PropToolbar(/* this.rootElement */)
-    console.log(this._propToolbar);
-    // toolbar.updateState('initialized', true)
+    this._propToolbar = new PropToolbar(this.rootElement)
+    // console.log(this._propToolbar);
+    this._propToolbar.updateState('initialized', true)
     // this.rootElement.appendChild(toolbar.attachedElement)
   }
 
