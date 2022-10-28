@@ -158,11 +158,11 @@ export default class PropObject {
     const knameContentElement = document.createElement('div')
     knameContentElement.classList.add('ir__prop-kname__content')
     // -- Icon
-    const nameIcnElement = document.createElement('div')
-    nameIcnElement.classList.add('ir__prop-kname__icn')
+    const icnCaretElement = document.createElement('div')
+    icnCaretElement.classList.add('ir__prop-kname__icn')
     const icn = icon({ prefix: 'fas', iconName: 'caret-right', })
     const icnHTML = toHtml(icn.abstract[0])
-    nameIcnElement.innerHTML = icnHTML
+    icnCaretElement.innerHTML = icnHTML
     // -- Text
     const propKeyNameElement = document.createElement('div')
     propKeyNameElement.classList.add('ir__prop-kname')
@@ -184,8 +184,8 @@ export default class PropObject {
     objectValue.setPlaceholderElement(placeholderElement)
     // -- DOM building
     propKeyNameElement.appendChild(keyNameColonElement)
-    knameContentElement.appendChild(nameIcnElement)
     knameContentElement.appendChild(propKeyNameElement)
+    knameContentElement.appendChild(icnCaretElement)
     knameContentElement.append(placeholderElement)
     nameElement.appendChild(knameContentElement)
 
@@ -222,11 +222,11 @@ export default class PropObject {
     const knameContentElement = document.createElement('div')
     knameContentElement.classList.add('ir__prop-kname__content')
     // -- Icon
-    const nameIcnElement = document.createElement('div')
-    nameIcnElement.classList.add('ir__prop-kname__icn')
+    const icnCaretElement = document.createElement('div')
+    icnCaretElement.classList.add('ir__prop-kname__icn')
     const icn = icon({ prefix: 'fas', iconName: 'caret-right', })
     const icnHTML = toHtml(icn.abstract[0])
-    nameIcnElement.innerHTML = icnHTML
+    icnCaretElement.innerHTML = icnHTML
     // -- Text
     const propKeyNameElement = document.createElement('div')
     propKeyNameElement.classList.add('ir__prop-kname')
@@ -248,8 +248,8 @@ export default class PropObject {
     arrayValue.setPlaceholderElement(placeholderElement)
     // -- DOM building
     propKeyNameElement.appendChild(keyNameColonElement)
-    knameContentElement.appendChild(nameIcnElement)
     knameContentElement.appendChild(propKeyNameElement)
+    knameContentElement.appendChild(icnCaretElement)
     knameContentElement.append(placeholderElement)
     nameElement.appendChild(knameContentElement)
 
