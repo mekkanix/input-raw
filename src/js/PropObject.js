@@ -298,8 +298,7 @@ export default class PropObject {
   }
 
   _onKNameBoxMouseOut(_) {
-    // this._propToolbar.resetTargetElement()
-    this._propToolbar.applyTargetElementReset()
+    this._propToolbar.resetTargetElement()
   }
 
   setProp(key, value) {

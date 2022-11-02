@@ -12,7 +12,7 @@ export default class PropToolbar {
   _rootElement = null
   attachedElement = document.createElement('div')
   targetElement = null
-  _hovering = false
+  isActive = false
   state = {
     initialized: false,
     editing: false,
@@ -86,27 +86,6 @@ export default class PropToolbar {
     // Base
     this.attachedElement.classList.add('ir__prop-toolbar')
     this.attachedElement.style.display = 'none'
-    this.attachedElement.addEventListener('mouseover', (e) => {
-      console.log('PT over');
-      this._hovering = true
-      // const pt = findElementParentByClass(e.target, 'ir__prop-toolbar')
-      // this.setTargetElement(pt)
-    })
-    this.attachedElement.addEventListener('mouseout', (e) => {
-      console.log(this._hovering, this.targetElement);
-      // console.log(this.targetElement);
-      // console.log(e.target.classList, e.target.classList.contains('ir__prop-toolbar'));
-      // console.log(pt);
-      // if (!e.target.classList.contains('ir__prop-toolbar') && !pt) {
-      //   this._hovering = false
-      //   console.log('PT out');
-      // }
-      // this._hovering = false
-      // const pt = findElementParentByClass(e.target, 'ir__prop-toolbar')
-      // if (!pt) {
-      //   this.resetTargetElement()
-      // }
-    })
     // Actions
     const actionsElement = document.createElement('div')
     actionsElement.classList.add('ir__prop-toolbar__actions')
@@ -129,6 +108,20 @@ export default class PropToolbar {
     this.attachedElement.appendChild(actionsElement)
     // DOM mounting
     this._rootElement.appendChild(this.attachedElement)
+    // Events
+    this.attachedElement.addEventListener(
+      'mouseover',
+      this._onMouseOver.bind(this)
+    )
+    // Note: Pseudo-mouseout is managed by listening to & checking all
+    // `body`-related "mouseover" events' targets.
+    // It's far more performant than listening to real "mouseout"
+    // events and recursively checking events' propagations related
+    // to the PT element.
+    document.body.addEventListener(
+      'mouseover',
+      this._onMouseOut.bind(this)
+    )
   }
 
   computeDOM() {
@@ -157,7 +150,21 @@ export default class PropToolbar {
   }
 
   _handleDisabledState() {
-    this.attachedElement.style.display = 'none'
+    if (!this.isActive) {
+      this.attachedElement.style.display = 'none'
+    }
+  }
+
+  _onMouseOver(_) {
+    this.isActive = true
+  }
+
+  _onMouseOut(e) {
+    const isHovering = findElementParentByClass(e.target, 'ir__prop-toolbar')
+    if (!this.targetElement && !isHovering) {
+      this.isActive = false
+      this.resetTargetElement()
+    }
   }
 
   _onEditClick(e) {
@@ -185,26 +192,14 @@ export default class PropToolbar {
   }
 
   setTargetElement(element) {
-    if (!element) {
-      this._hovering = false
-    }
-    if (!this._hovering) {
-      this.targetElement = element
-      this.computeDOM()
-    }
+    this.targetElement = element
+    this.isActive = true
+    this.computeDOM()
   }
 
   resetTargetElement() {
     this.targetElement = null
     this.computeDOM()
-  }
-
-  applyTargetElementReset() {
-    // console.log(this._hovering);
-    // if (!this._hovering) {
-    //   this.targetElement = null
-    //   this.computeDOM()
-    // }
   }
 
   updateState(prop, value) {
