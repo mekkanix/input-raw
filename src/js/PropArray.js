@@ -313,9 +313,8 @@ export default class PropArray {
     const idxColonElement = document.createElement('div')
     idxColonElement.classList.add('ir__prop-kname__colon')
     idxColonElement.innerHTML = ':'
-    keyNameContentElement.append(idxElement)
-    keyNameContentElement.append(idxColonElement)
-    kNameBoxElement.append(keyNameContentElement)
+    idxElement.append(idxColonElement)
+    // kNameBoxElement.append(keyNameContentElement)
     // Building: prop value
     const valueElement = document.createElement('div')
     valueElement.classList.add('ir__prop-value')

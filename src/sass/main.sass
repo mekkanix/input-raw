@@ -133,15 +133,21 @@
 
   // -- Object
   .ir__prop-object
+    // ...
 
   // -- Array
   .ir__prop-array
-    .ir__prop-kname-box .ir__prop-kname__content
+    .ir__prop-kname-box .ir__prop-kname__content,
+    .ir__prop-box .ir__prop-content
       .ir__prop-kname__icn
         // padding-right: 4px
       .ir__prop-kname__idx
+        display: inline-flex
         font-size: 14px
         color: #1b1bff
+    .ir__prop-kname__colon
+      font-size: 14px
+      padding-right: 5px
         // margin-right: 5px
       .ir__prop__placeholder
         // padding-left: 5px
