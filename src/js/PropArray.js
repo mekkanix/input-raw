@@ -314,7 +314,6 @@ export default class PropArray {
     keyNameContentElement.append(idxElement)
     keyNameContentElement.append(idxColonElement)
     kNameBoxElement.append(keyNameContentElement)
-    // nameElement.appendChild(keyNameColonElement)
     // Building: prop value
     const valueElement = document.createElement('div')
     valueElement.classList.add('ir__prop-value')
@@ -331,6 +330,7 @@ export default class PropArray {
     const propKeyName = propElement.getAttribute('data-ir-prop-idx')
     const prop = this._getPropByKey(propKeyName)
     prop.updateState('open', !prop.state.open)
+    this._propToolbar.computeDOM()
   }
 
   _onPropBoxMouseOver(e) {
@@ -342,7 +342,10 @@ export default class PropArray {
   }
 
   _onKNameBoxMouseOver(e) {
-    const propElement = findElementParentByClass(e.target, 'ir__prop-kname__content')
+    const propElement = findElementParentByClass(
+      e.target,
+      'ir__prop-kname__content',
+    )
     this._propToolbar.setTargetElement(propElement)
   }
 
