@@ -4,6 +4,7 @@ import {
 } from '@fortawesome/fontawesome-svg-core'
 import {
   findElementParentByClass,
+  getElementOffsetFromParent,
 } from './helpers/DOM.js'
 
 export default class PropToolbar {
@@ -146,14 +147,12 @@ export default class PropToolbar {
   }
 
   _handleEnabledState() {
-    // -- Positioning
-    const targetAbsPos = this.targetElement.getBoundingClientRect()
-    const targetHeight = this.targetElement.clientHeight
+    // Positioning
+    const offset = getElementOffsetFromParent(this.targetElement, 'ir-root')
     const targetWidth = this.targetElement.clientWidth
-    const toolbarPosTop = targetAbsPos.y + targetHeight
-    const toolbarPosLeft = targetAbsPos.x + targetWidth
-    this.attachedElement.style.top = `${toolbarPosTop - 18}px`
-    this.attachedElement.style.left = `${toolbarPosLeft - 2}px`
+    this.attachedElement.style.left = `${offset.x + targetWidth - 2}px`
+    this.attachedElement.style.top = `${offset.y - 2}px`
+    // States
     this.attachedElement.style.display = 'block'
   }
 

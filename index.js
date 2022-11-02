@@ -48,9 +48,9 @@ function InputRawLib(selector, config = null) {
 
   // WARNING: To avoid performance issues when the user creates a big
   // amount of IR instances, only the last IR instance created is
-  // stored in the `inputRaw` local var., by replacing the old ones,
-  // meaning that it's not possible for Public API's methods & props
-  // to interact with old IR instances in that case.
+  // stored in the `inputRaw` local var., by replacing the old one(s),
+  // meaning that Public API's methods & props can only interact with
+  // the last created IR instance.
 
   InputRawLib.mount = (selector) => {
     inputRaw.init(selector)
