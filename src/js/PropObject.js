@@ -266,14 +266,16 @@ export default class PropObject {
     // Building: prop "box"
     const element = document.createElement('div')
     element.classList.add('ir__prop-primitive')
+    const boxElement = document.createElement('div')
+    boxElement.classList.add('ir__prop-box')
     const contentElement = document.createElement('div')
-    contentElement.classList.add('ir__prop-box')
+    contentElement.classList.add('ir__prop-content')
     // Events
-    contentElement.addEventListener(
+    boxElement.addEventListener(
       'mouseover',
       this._onPropBoxMouseOver.bind(this)
     )
-    contentElement.addEventListener(
+    boxElement.addEventListener(
       'mouseout',
       this._onKNameBoxMouseOut.bind(this)
     )
@@ -292,7 +294,8 @@ export default class PropObject {
     // Main DOM building
     contentElement.appendChild(nameElement)
     contentElement.appendChild(valueElement)
-    element.appendChild(contentElement)
+    boxElement.appendChild(contentElement)
+    element.appendChild(boxElement)
     return element
   }
 
@@ -307,7 +310,7 @@ export default class PropObject {
   _onPropBoxMouseOver(e) {
     const propElement = findElementParentByClass(
       e.target,
-      'ir__prop-box',
+      'ir__prop-content',
     )
     this._propToolbar.setTargetElement(propElement)
   }

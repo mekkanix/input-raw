@@ -113,9 +113,9 @@ export default class PropToolbar {
       'mouseover',
       this._onMouseOver.bind(this)
     )
-    // Note: Pseudo-mouseout is managed by listening to & checking all
-    // `body`-related "mouseover" events' targets.
-    // It's far more performant than listening to real "mouseout"
+    // Note: Pseudo-"mouseout" is managed by listening to & checking
+    // for PT on all `body`-related "mouseover" events' targets.
+    // It's far more simple to manage than listening to real "mouseout"
     // events and recursively checking events' propagations related
     // to the PT element.
     document.body.addEventListener(
@@ -144,7 +144,7 @@ export default class PropToolbar {
     const offset = getElementOffsetFromParent(this.targetElement, 'ir-root')
     const targetWidth = this.targetElement.clientWidth
     this.attachedElement.style.left = `${offset.x + targetWidth - 2}px`
-    this.attachedElement.style.top = `${offset.y - 2}px`
+    this.attachedElement.style.top = `${offset.y}px`
     // States
     this.attachedElement.style.display = 'block'
   }

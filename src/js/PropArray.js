@@ -289,8 +289,10 @@ export default class PropArray {
     // Building: prop "box"
     const element = document.createElement('div')
     element.classList.add('ir__prop-primitive')
+    const boxElement = document.createElement('div')
+    boxElement.classList.add('ir__prop-box')
     const contentElement = document.createElement('div')
-    contentElement.classList.add('ir__prop-box')
+    contentElement.classList.add('ir__prop-content')
     // Events
     contentElement.addEventListener(
       'mouseover',
@@ -319,9 +321,10 @@ export default class PropArray {
     valueElement.classList.add('ir__prop-value')
     valueElement.appendChild(primitiveValue.attachedElement)
     // Main DOM building
-    contentElement.appendChild(kNameBoxElement)
+    contentElement.appendChild(idxElement)
     contentElement.appendChild(valueElement)
-    element.appendChild(contentElement)
+    boxElement.appendChild(contentElement)
+    element.appendChild(boxElement)
     return element
   }
 
@@ -336,7 +339,7 @@ export default class PropArray {
   _onPropBoxMouseOver(e) {
     const propElement = findElementParentByClass(
       e.target,
-      'ir__prop-box',
+      'ir__prop-content',
     )
     this._propToolbar.setTargetElement(propElement)
   }

@@ -149,8 +149,6 @@
   // -- Primitive
   .ir__prop-primitive
     position: relative
-    display: flex
-    align-items: center
 
     // &.idle .ir__prop-name
     //   border: 1px solid transparent
@@ -164,20 +162,23 @@
     &:hover .ir__prop-actions
       display: block
 
-    .ir__prop-name
-      display: inline-flex
-      align-items: baseline
-      margin: 0 5px 0 0
-      font-size: 14px
-
-    .ir__prop-value
-      flex: 1 1 auto
+    .ir__prop-content
       display: flex
-      position: relative
-      font-size: 14px
+      align-items: center
+      .ir__prop-name
+        display: inline-flex
+        align-items: baseline
+        margin: 0 5px 0 0
+        font-size: 14px
 
-      .input-value
-        width: auto
+      .ir__prop-value
+        flex: 0 1 auto
+        display: flex
+        position: relative
+        font-size: 14px
+
+        .input-value
+          width: auto
 
   // Actions (row)
   .ir__prop-object__row-actions
