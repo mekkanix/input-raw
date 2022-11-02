@@ -165,7 +165,19 @@ export default class PropArray {
     // Building: prop key
     const nameElement = document.createElement('div')
     nameElement.classList.add('ir__prop-kname-box')
-    nameElement.addEventListener('click', this._onKNameBoxClick.bind(this))
+    // -- Events
+    nameElement.addEventListener(
+      'click',
+      this._onKNameBoxClick.bind(this)
+    )
+    nameElement.addEventListener(
+      'mouseover',
+      this._onKNameBoxMouseOver.bind(this)
+    )
+    nameElement.addEventListener(
+      'mouseout',
+      this._onKNameBoxMouseOut.bind(this)
+    )
     const knameContentElement = document.createElement('div')
     knameContentElement.classList.add('ir__prop-kname__content')
     // -- Icon
@@ -217,7 +229,19 @@ export default class PropArray {
     // Building: prop key
     const nameElement = document.createElement('div')
     nameElement.classList.add('ir__prop-kname-box')
-    nameElement.addEventListener('click', this._onKNameBoxClick.bind(this))
+    // -- Events
+    nameElement.addEventListener(
+      'click',
+      this._onKNameBoxClick.bind(this)
+    )
+    nameElement.addEventListener(
+      'mouseover',
+      this._onKNameBoxMouseOver.bind(this)
+    )
+    nameElement.addEventListener(
+      'mouseout',
+      this._onKNameBoxMouseOut.bind(this)
+    )
     const knameContentElement = document.createElement('div')
     knameContentElement.classList.add('ir__prop-kname__content')
     // -- Icon
@@ -296,6 +320,15 @@ export default class PropArray {
     const propKeyName = propElement.getAttribute('data-ir-prop-idx')
     const prop = this._getPropByKey(propKeyName)
     prop.updateState('open', !prop.state.open)
+  }
+
+  _onKNameBoxMouseOver(e) {
+    const propElement = findElementParentByClass(e.target, 'ir__prop-kname__content')
+    this._propToolbar.setTargetElement(propElement)
+  }
+
+  _onKNameBoxMouseOut(_) {
+    this._propToolbar.resetTargetElement()
   }
 
   addProp(value) {

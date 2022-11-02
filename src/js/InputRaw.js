@@ -54,9 +54,7 @@ export default class InputRaw {
 
   _initPropToolbar() {
     this._propToolbar = new PropToolbar(this.rootElement)
-    // console.log(this._propToolbar);
     this._propToolbar.updateState('initialized', true)
-    // this.rootElement.appendChild(toolbar.attachedElement)
   }
 
   _initDefaultState() {
