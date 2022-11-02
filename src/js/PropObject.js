@@ -266,6 +266,17 @@ export default class PropObject {
     // Building: prop "box"
     const element = document.createElement('div')
     element.classList.add('ir__prop-primitive')
+    const contentElement = document.createElement('div')
+    contentElement.classList.add('ir__prop-box')
+    // Events
+    contentElement.addEventListener(
+      'mouseover',
+      this._onPropBoxMouseOver.bind(this)
+    )
+    contentElement.addEventListener(
+      'mouseout',
+      this._onKNameBoxMouseOut.bind(this)
+    )
     // Building: prop key
     const nameElement = document.createElement('div')
     nameElement.classList.add('ir__prop-name')
@@ -279,8 +290,9 @@ export default class PropObject {
     valueElement.classList.add('ir__prop-value')
     valueElement.appendChild(primitiveValue.attachedElement)
     // Main DOM building
-    element.appendChild(nameElement)
-    element.appendChild(valueElement)
+    contentElement.appendChild(nameElement)
+    contentElement.appendChild(valueElement)
+    element.appendChild(contentElement)
     return element
   }
 
@@ -292,8 +304,19 @@ export default class PropObject {
     this._propToolbar.computeDOM()
   }
 
+  _onPropBoxMouseOver(e) {
+    const propElement = findElementParentByClass(
+      e.target,
+      'ir__prop-box',
+    )
+    this._propToolbar.setTargetElement(propElement)
+  }
+
   _onKNameBoxMouseOver(e) {
-    const propElement = findElementParentByClass(e.target, 'ir__prop-kname__content')
+    const propElement = findElementParentByClass(
+      e.target,
+      'ir__prop-kname__content',
+    )
     this._propToolbar.setTargetElement(propElement)
   }
 

@@ -8,7 +8,13 @@
   font-family: 'Source Code Pro', monospace
 
   // Generic
-  // ...
+  .ir__prop .ir__prop-box,
+  .ir__prop .ir__prop-kname-box
+    position: relative
+    display: flex
+    align-items: center
+    min-height: 22px
+    cursor: pointer
 
   // Nested Props
   .ir__prop-wrapper
@@ -29,13 +35,7 @@
 
     // -- Key
     .ir__prop-kname-box
-      position: relative
-      display: flex
-      align-items: center
-      min-height: 22px
-      padding-bottom: 1px
       color: #444
-      cursor: pointer
 
       &:hover .ir__prop-object-actions
         display: flex

@@ -289,6 +289,17 @@ export default class PropArray {
     // Building: prop "box"
     const element = document.createElement('div')
     element.classList.add('ir__prop-primitive')
+    const contentElement = document.createElement('div')
+    contentElement.classList.add('ir__prop-box')
+    // Events
+    contentElement.addEventListener(
+      'mouseover',
+      this._onPropBoxMouseOver.bind(this)
+    )
+    contentElement.addEventListener(
+      'mouseout',
+      this._onKNameBoxMouseOut.bind(this)
+    )
     // Building: prop index
     const kNameBoxElement = document.createElement('div')
     kNameBoxElement.classList.add('ir__prop-kname-box')
@@ -309,17 +320,25 @@ export default class PropArray {
     valueElement.classList.add('ir__prop-value')
     valueElement.appendChild(primitiveValue.attachedElement)
     // Main DOM building
-    element.appendChild(kNameBoxElement)
-    element.appendChild(valueElement)
+    contentElement.appendChild(kNameBoxElement)
+    contentElement.appendChild(valueElement)
+    element.appendChild(contentElement)
     return element
   }
 
   _onKNameBoxClick(e) {
-    // const kNameBoxElement = findElementParentByClass(e.target, 'ir__prop-kname-box')
     const propElement = findElementParentByClass(e.target, 'ir__prop')
     const propKeyName = propElement.getAttribute('data-ir-prop-idx')
     const prop = this._getPropByKey(propKeyName)
     prop.updateState('open', !prop.state.open)
+  }
+
+  _onPropBoxMouseOver(e) {
+    const propElement = findElementParentByClass(
+      e.target,
+      'ir__prop-box',
+    )
+    this._propToolbar.setTargetElement(propElement)
   }
 
   _onKNameBoxMouseOver(e) {
