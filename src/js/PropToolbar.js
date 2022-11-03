@@ -90,9 +90,11 @@ export default class PropToolbar {
     const actionsElement = document.createElement('div')
     actionsElement.classList.add('ir__prop-toolbar__actions')
     this._actions.map(action => {
+      const actionBoxElement = document.createElement('div')
+      actionBoxElement.classList.add('ir__prop-toolbar__action__box')
+      actionBoxElement.classList.add(action.class)
       const actionElement = document.createElement('div')
       actionElement.classList.add('ir__prop-toolbar__action')
-      actionElement.classList.add(action.class)
       actionElement.addEventListener('click', action.eventHandler)
       let icnHTML = null
       if (action.icon) {
@@ -102,8 +104,9 @@ export default class PropToolbar {
         icnHTML = action.text
       }
       actionElement.innerHTML = icnHTML
-      action.attachedElement = actionElement
-      actionsElement.appendChild(actionElement)
+      action.attachedElement = actionBoxElement
+      actionBoxElement.appendChild(actionElement)
+      actionsElement.appendChild(actionBoxElement)
     })
     this.attachedElement.appendChild(actionsElement)
     // DOM mounting
@@ -144,7 +147,7 @@ export default class PropToolbar {
     const offset = getElementOffsetFromParent(this.targetElement, 'ir-root')
     const targetWidth = this.targetElement.clientWidth
     this.attachedElement.style.left = `${offset.x + targetWidth - 2}px`
-    this.attachedElement.style.top = `${offset.y}px`
+    this.attachedElement.style.top = `${offset.y - 1}px`
     // States
     this.attachedElement.style.display = 'block'
   }

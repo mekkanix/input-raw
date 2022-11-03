@@ -3,39 +3,59 @@
   position: absolute
   z-index: 10
   height: 22px
-  padding-left: 8px
+  padding-left: 10px
 
   .ir__prop-toolbar__actions
+    position: relative
     box-sizing: border-box
     height: 100%
     display: flex
     align-items: center
     font-size: 11px
-    background: #eee
-    border: 1px solid #ddd
+    background: #ddd
 
-    .ir__prop-toolbar__action
-      width: 18px
-      height: 18px
-      flex: 0 0 18px
+    &::before
+      content: ''
+      display: block
+      width: 0
+      height: 0
+      position: absolute
+      top: 5.5px
+      left: -10px
+      border-width: 5px
+      border-style: solid
+      border-color: transparent
+      border-right-color: #ddd
+
+    .ir__prop-toolbar__action__box
+      width: 22px
+      height: 22px
+      flex: 0 0 22px
       display: flex
       align-items: center
       justify-content: center
-      color: #777
-      cursor: pointer
-      font-size: 14px
+      .ir__prop-toolbar__action
+        width: 18px
+        height: 18px
+        flex: 0 0 18px
+        display: flex
+        align-items: center
+        justify-content: center
+        color: #777
+        cursor: pointer
+        font-size: 14px
 
-      &:hover
-        color: #333
+        &:hover
+          color: #333
 
-      &.convert2object,
-      &.convert2array
-        position: relative
-        top: -1px
-        font-family: 'Source Code Pro', monospace
-        font-size: 12px
-        font-weight: 700
-
-        span
+        &.convert2object,
+        &.convert2array
           position: relative
           top: -1px
+          font-family: 'Source Code Pro', monospace
+          font-size: 12px
+          font-weight: 700
+
+          span
+            position: relative
+            top: -1px

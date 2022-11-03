@@ -21,7 +21,6 @@
     position: relative
     .ir__prop
       position: relative
-      // padding: 0 0 0 15px
 
   // -- Object, Array
   .ir__prop-object,
@@ -36,21 +35,13 @@
     // -- Key
     .ir__prop-kname-box
       color: #444
-
       &:hover .ir__prop-object-actions
         display: flex
-
       .ir__prop-kname__content
         display: flex
         align-items: center
-
-        .ir__prop-kname__icn
-          // position: absolute
-          // left: -6px
-          // top: 3px
         .ir__prop-kname
           display: flex
-          // padding-left: 3px
           font-size: 14px
         .ir__prop-kname__colon
           font-size: 14px
@@ -74,9 +65,6 @@
             color: #909090
             font-weight: 700
 
-        // &.opening-disabled .ir__prop-kname__icn
-        //   color: #aaa
-
     // -- Actions
     .ir__prop-actions,
     .ir__prop__row-actions
@@ -94,10 +82,8 @@
         justify-content: center
         color: #777
         cursor: pointer
-
         &:hover
           color: #333
-
         &.convert2object,
         &.convert2array
           position: relative
@@ -139,8 +125,6 @@
   .ir__prop-array
     .ir__prop-kname-box .ir__prop-kname__content,
     .ir__prop-box .ir__prop-content
-      .ir__prop-kname__icn
-        // padding-right: 4px
       .ir__prop-kname__idx
         display: inline-flex
         font-size: 14px
@@ -148,26 +132,12 @@
     .ir__prop-kname__colon
       font-size: 14px
       padding-right: 5px
-        // margin-right: 5px
-      .ir__prop__placeholder
-        // padding-left: 5px
 
   // -- Primitive
   .ir__prop-primitive
     position: relative
-
-    // &.idle .ir__prop-name
-    //   border: 1px solid transparent
-
-    //   .ir__prop-colon
-    //     margin-left: 1px
-
-    //   &.ir__prop-colon
-    //     margin-left: 1px
-
     &:hover .ir__prop-actions
       display: block
-
     .ir__prop-content
       display: flex
       align-items: center
@@ -202,15 +172,12 @@
       color: #777
       cursor: pointer
       text-align: center
-
       &.add-primitive
         font-size: 9px
-
       &:not(.add-primitive)
         display: none
         width: auto
         padding: 0 4px
-
       &:hover
         color: #333
 
