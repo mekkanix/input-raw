@@ -169,14 +169,14 @@ export default class PropObject {
     )
     nameElement.addEventListener(
       'mouseover',
-      this._onKNameBoxMouseOver.bind(this)
+      this._onPropBoxMouseOver.bind(this)
     )
     nameElement.addEventListener(
       'mouseout',
-      this._onKNameBoxMouseOut.bind(this)
+      this._onPropBoxMouseOut.bind(this)
     )
     const knameContentElement = document.createElement('div')
-    knameContentElement.classList.add('ir__prop-kname__content')
+    knameContentElement.classList.add('ir__prop-content')
     // -- Icon
     const icnCaretElement = document.createElement('div')
     icnCaretElement.classList.add('ir__prop-kname__icn')
@@ -236,14 +236,14 @@ export default class PropObject {
     )
     nameElement.addEventListener(
       'mouseover',
-      this._onKNameBoxMouseOver.bind(this)
+      this._onPropBoxMouseOver.bind(this)
     )
     nameElement.addEventListener(
       'mouseout',
-      this._onKNameBoxMouseOut.bind(this)
+      this._onPropBoxMouseOut.bind(this)
     )
     const knameContentElement = document.createElement('div')
-    knameContentElement.classList.add('ir__prop-kname__content')
+    knameContentElement.classList.add('ir__prop-content')
     // -- Icon
     const icnCaretElement = document.createElement('div')
     icnCaretElement.classList.add('ir__prop-kname__icn')
@@ -303,7 +303,7 @@ export default class PropObject {
     )
     boxElement.addEventListener(
       'mouseout',
-      this._onKNameBoxMouseOut.bind(this)
+      this._onPropBoxMouseOut.bind(this)
     )
     // Building: prop key
     const nameElement = document.createElement('div')
@@ -360,25 +360,7 @@ export default class PropObject {
     )
   }
 
-  _onKNameBoxMouseOver(e) {
-    const propContentElement = findElementParentByClass(
-      e.target,
-      'ir__prop-kname__content',
-    )
-    const propElement = findElementParentByClass(
-      e.target,
-      'ir__prop',
-    )
-    const propName = propElement.getAttribute('data-ir-prop-key')
-    this._propToolbar.setTarget(
-      this.$value,
-      propName,
-      propContentElement,
-      this._propToolbarActionCallback.bind(this),
-    )
-  }
-
-  _onKNameBoxMouseOut(_) {
+  _onPropBoxMouseOut(_) {
     this._propToolbar.resetTargetElement()
   }
 

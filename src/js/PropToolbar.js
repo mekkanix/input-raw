@@ -190,7 +190,7 @@ export default class PropToolbar {
 
   _onMouseOut(e) {
     const isHovering = findElementParentByClass(e.target, 'ir__prop-toolbar')
-    if (!this.targetElement && !isHovering) {
+    if (!this.state.editing && !this.targetElement && !isHovering) {
       this.isActive = false
       this.computeDOM()
     }
@@ -201,6 +201,8 @@ export default class PropToolbar {
    */
 
   _onEditClick(e) {
+    const prop = this._targetScope[this._targetPropName]
+    console.log(prop, findElementParentByClass(prop.attachedElement, 'ir__prop-content'));
     this._updateState('editing', true)
   }
 
@@ -259,22 +261,26 @@ export default class PropToolbar {
   }
 
   setTarget(scope, propName, element, actionCallback) {
-    // Store prop data
-    this._targetScope = scope
-    this._targetPropName = propName
-    this._targetCallback = actionCallback
-    this.targetElement = element
-    this.isActive = true
-    //
-    const prop = scope[propName]
-    this._prepareStateFromPropType(prop.propType)
-    this._updateState('initialized', true)
+    if (!this.state.editing) {
+      // Store prop data
+      this._targetScope = scope
+      this._targetPropName = propName
+      this._targetCallback = actionCallback
+      this.targetElement = element
+      this.isActive = true
+      //
+      const prop = scope[propName]
+      this._prepareStateFromPropType(prop.propType)
+      this._updateState('initialized', true)
+    }
   }
 
   resetTargetElement() {
-    this.targetElement = null
-    if (!this.isActive) {
-      this._resetState()
+    if (!this.state.editing) {
+      this.targetElement = null
+      if (!this.isActive) {
+        this._resetState()
+      }
     }
   }
 }

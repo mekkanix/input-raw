@@ -182,14 +182,14 @@ export default class PropArray {
     )
     nameElement.addEventListener(
       'mouseover',
-      this._onKNameBoxMouseOver.bind(this)
+      this._onPropBoxMouseOver.bind(this)
     )
     nameElement.addEventListener(
       'mouseout',
-      this._onKNameBoxMouseOut.bind(this)
+      this._onPropBoxMouseOut.bind(this)
     )
     const knameContentElement = document.createElement('div')
-    knameContentElement.classList.add('ir__prop-kname__content')
+    knameContentElement.classList.add('ir__prop-content')
     // -- Icon
     const keyIcnElement = document.createElement('div')
     keyIcnElement.classList.add('ir__prop-kname__icn')
@@ -249,14 +249,14 @@ export default class PropArray {
     )
     nameElement.addEventListener(
       'mouseover',
-      this._onKNameBoxMouseOver.bind(this)
+      this._onPropBoxMouseOver.bind(this)
     )
     nameElement.addEventListener(
       'mouseout',
-      this._onKNameBoxMouseOut.bind(this)
+      this._onPropBoxMouseOut.bind(this)
     )
     const knameContentElement = document.createElement('div')
-    knameContentElement.classList.add('ir__prop-kname__content')
+    knameContentElement.classList.add('ir__prop-content')
     // -- Icon
     const keyIcnElement = document.createElement('div')
     keyIcnElement.classList.add('ir__prop-kname__icn')
@@ -316,13 +316,13 @@ export default class PropArray {
     )
     contentElement.addEventListener(
       'mouseout',
-      this._onKNameBoxMouseOut.bind(this)
+      this._onPropBoxMouseOut.bind(this)
     )
     // Building: prop index
     const kNameBoxElement = document.createElement('div')
     kNameBoxElement.classList.add('ir__prop-kname-box')
     const keyNameContentElement = document.createElement('div')
-    keyNameContentElement.classList.add('ir__prop-kname__content')
+    keyNameContentElement.classList.add('ir__prop-content')
     const idxElement = document.createElement('div')
     idxElement.classList.add('ir__prop-kname__idx')
     const idxBoxElement = document.createElement('span')
@@ -377,25 +377,7 @@ export default class PropArray {
     )
   }
 
-  _onKNameBoxMouseOver(e) {
-    const propContentElement = findElementParentByClass(
-      e.target,
-      'ir__prop-kname__content',
-    )
-    const propElement = findElementParentByClass(
-      e.target,
-      'ir__prop',
-    )
-    const propName = propElement.getAttribute('data-ir-prop-idx')
-    this._propToolbar.setTarget(
-      this.$value,
-      propName,
-      propContentElement,
-      this._propToolbarActionCallback.bind(this),
-    )
-  }
-
-  _onKNameBoxMouseOut(_) {
+  _onPropBoxMouseOut(_) {
     this._propToolbar.resetTargetElement()
   }
 
