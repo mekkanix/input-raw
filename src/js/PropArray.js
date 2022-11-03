@@ -3,8 +3,8 @@ import {
   toHtml,
 } from '@fortawesome/fontawesome-svg-core'
 import {
-  findElementChildByClass,
   findElementParentByClass,
+  findElementChildByClass,
 } from './helpers/DOM.js'
 
 export default class PropArray {
@@ -65,36 +65,36 @@ export default class PropArray {
     this._blankValueElement = document.createElement('div')
     this._blankValueElement.classList.add('ir__prop__blank')
     this._blankValueElement.innerHTML = '(empty)'
-    // Row actions
-    // const rowActionsElement = document.createElement('div')
-    // rowActionsElement.classList.add('ir__prop__row-actions')
-    // for (const rowAction of this._rowActions) {
-    //   const rowActionElement = document.createElement('div')
-    //   rowActionElement.classList.add('ir__prop__row-action')
-    //   rowActionElement.classList.add('ir__prop__action')
-    //   for (const cssClass of rowAction.classes) {
-    //     rowActionElement.classList.add(cssClass)
-    //   }
-    //   let icnHTML = null
-    //   if (rowAction.icon) {
-    //     const icn = icon({ prefix: 'fas', iconName: rowAction.icon, })
-    //     icnHTML = toHtml(icn.abstract[0])
-    //   } else if (rowAction.text) {
-    //     icnHTML = rowAction.text
-    //   }
-    //   rowActionElement.innerHTML = icnHTML
-    //   rowActionsElement.appendChild(rowActionElement)
-    // }
-
     // Main DOM building
     this.attachedElement.appendChild(this._propWrapperElement)
-    // this.attachedElement.appendChild(rowActionsElement)
   }
 
   _computeDOM() {
     // Processing: parent element
     if (!this._propParentElement) {
       this._propParentElement = findElementParentByClass(this.attachedElement, 'ir__prop')
+    }
+    // Processing: pending DOM actions (delete)
+    for (const element of this._propWrapperElement.children) {
+      const pendingAction = element.getAttribute('data-ir-action')
+      if (pendingAction) {
+        if (pendingAction === 'delete') {
+          element.remove()
+        }
+      }
+    }
+    // Processing: indexes updates
+    // Note: This process is separated from the "actions" loop in
+    // order to use an updated DOM for updating indexes.
+    const children = this._propWrapperElement.children
+    for (let i = 0; i < children.length; i++) {
+      const element = children.item(i)
+      element.setAttribute('data-ir-prop-idx', i)
+      const idxElement = findElementChildByClass(
+        element,
+        'ir__prop-kname__idx-box',
+      )
+      idxElement.innerText = i
     }
     // Processing: values
     for (const [i, childPropValue] of this.$value.entries()) {
@@ -148,6 +148,16 @@ export default class PropArray {
     return false
   }
 
+  _getDOMPropIdxElement(key) {
+    for (const element of this._propWrapperElement.children) {
+      const propKey = element.getAttribute('data-ir-prop-idx')
+      if (propKey === key) {
+        return element
+      }
+    }
+    return null
+  }
+
   _getPropByKey(key) {
     for (const [propKey, propValue] of Object.entries(this.$value)) {
       if (propKey === key) {
@@ -187,9 +197,12 @@ export default class PropArray {
     const icnHTML = toHtml(icn.abstract[0])
     keyIcnElement.innerHTML = icnHTML
     // -- Text
-    const propKeyIdxElement = document.createElement('div')
-    propKeyIdxElement.classList.add('ir__prop-kname__idx')
-    propKeyIdxElement.innerHTML = index
+    const idxElement = document.createElement('div')
+    idxElement.classList.add('ir__prop-kname__idx')
+    const idxBoxElement = document.createElement('span')
+    idxBoxElement.classList.add('ir__prop-kname__idx-box')
+    idxBoxElement.innerHTML = index
+    idxElement.appendChild(idxBoxElement)
     const idxColonElement = document.createElement('div')
     idxColonElement.classList.add('ir__prop-kname__colon')
     idxColonElement.innerHTML = ':'
@@ -206,7 +219,7 @@ export default class PropArray {
     placeholderElement.append(placeholderIcn)
     objectValue.setPlaceholderElement(placeholderElement)
     // -- DOM building
-    knameContentElement.appendChild(propKeyIdxElement)
+    knameContentElement.appendChild(idxElement)
     knameContentElement.appendChild(idxColonElement)
     knameContentElement.appendChild(keyIcnElement)
     knameContentElement.append(placeholderElement)
@@ -251,9 +264,12 @@ export default class PropArray {
     const icnHTML = toHtml(icn.abstract[0])
     keyIcnElement.innerHTML = icnHTML
     // -- Text
-    const propKeyIdxElement = document.createElement('div')
-    propKeyIdxElement.classList.add('ir__prop-kname__idx')
-    propKeyIdxElement.innerHTML = index
+    const idxElement = document.createElement('div')
+    idxElement.classList.add('ir__prop-kname__idx')
+    const idxBoxElement = document.createElement('span')
+    idxBoxElement.classList.add('ir__prop-kname__idx-box')
+    idxBoxElement.innerHTML = index
+    idxElement.appendChild(idxBoxElement)
     const idxColonElement = document.createElement('div')
     idxColonElement.classList.add('ir__prop-kname__colon')
     idxColonElement.innerHTML = ':'
@@ -270,7 +286,7 @@ export default class PropArray {
     placeholderElement.append(placeholderIcn)
     arrayValue.setPlaceholderElement(placeholderElement)
     // -- DOM building
-    knameContentElement.appendChild(propKeyIdxElement)
+    knameContentElement.appendChild(idxElement)
     knameContentElement.appendChild(idxColonElement)
     knameContentElement.appendChild(keyIcnElement)
     knameContentElement.append(placeholderElement)
@@ -309,12 +325,14 @@ export default class PropArray {
     keyNameContentElement.classList.add('ir__prop-kname__content')
     const idxElement = document.createElement('div')
     idxElement.classList.add('ir__prop-kname__idx')
-    idxElement.innerHTML = key
+    const idxBoxElement = document.createElement('span')
+    idxBoxElement.classList.add('ir__prop-kname__idx-box')
+    idxBoxElement.innerHTML = key
+    idxElement.appendChild(idxBoxElement)
     const idxColonElement = document.createElement('div')
     idxColonElement.classList.add('ir__prop-kname__colon')
     idxColonElement.innerHTML = ':'
     idxElement.append(idxColonElement)
-    // kNameBoxElement.append(keyNameContentElement)
     // Building: prop value
     const valueElement = document.createElement('div')
     valueElement.classList.add('ir__prop-value')
@@ -327,6 +345,12 @@ export default class PropArray {
     return element
   }
 
+  _propToolbarActionCallback(_, propName) {
+    const element = this._getDOMPropIdxElement(propName)
+    element.setAttribute('data-ir-action', 'delete')
+    this._computeDOM()
+  }
+
   _onKNameBoxClick(e) {
     const propElement = findElementParentByClass(e.target, 'ir__prop')
     const propKeyName = propElement.getAttribute('data-ir-prop-idx')
@@ -336,19 +360,39 @@ export default class PropArray {
   }
 
   _onPropBoxMouseOver(e) {
-    const propElement = findElementParentByClass(
+    const propContentElement = findElementParentByClass(
       e.target,
       'ir__prop-content',
     )
-    this._propToolbar.setTargetElement(propElement)
+    const propElement = findElementParentByClass(
+      e.target,
+      'ir__prop',
+    )
+    const propName = propElement.getAttribute('data-ir-prop-idx')
+    this._propToolbar.setTarget(
+      this.$value,
+      propName,
+      propContentElement,
+      this._propToolbarActionCallback.bind(this),
+    )
   }
 
   _onKNameBoxMouseOver(e) {
-    const propElement = findElementParentByClass(
+    const propContentElement = findElementParentByClass(
       e.target,
       'ir__prop-kname__content',
     )
-    this._propToolbar.setTargetElement(propElement)
+    const propElement = findElementParentByClass(
+      e.target,
+      'ir__prop',
+    )
+    const propName = propElement.getAttribute('data-ir-prop-idx')
+    this._propToolbar.setTarget(
+      this.$value,
+      propName,
+      propContentElement,
+      this._propToolbarActionCallback.bind(this),
+    )
   }
 
   _onKNameBoxMouseOut(_) {

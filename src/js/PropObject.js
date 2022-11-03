@@ -4,6 +4,7 @@ import {
 } from '@fortawesome/fontawesome-svg-core'
 import {
   findElementParentByClass,
+  findElementChildByAttrValue,
 } from './helpers/DOM.js'
 
 export default class PropObject {
@@ -73,6 +74,15 @@ export default class PropObject {
     if (!this._propParentElement) {
       this._propParentElement = findElementParentByClass(this.attachedElement, 'ir__prop')
     }
+    // Processing: pending DOM actions (delete)
+    for (const element of this._propWrapperElement.children) {
+      const pendingAction = element.getAttribute('data-ir-action')
+      if (pendingAction) {
+        if (pendingAction === 'delete') {
+          element.remove()
+        }
+      }
+    }
     // Processing: values
     for (const [chilPropKey, childPropValue] of Object.entries(this.$value)) {
       if (!this._hasDOMPropKey(chilPropKey)) {
@@ -125,6 +135,16 @@ export default class PropObject {
     return false
   }
 
+  _getDOMPropKeyElement(key) {
+    for (const element of this._propWrapperElement.children) {
+      const propKey = element.getAttribute('data-ir-prop-key')
+      if (propKey === key) {
+        return element
+      }
+    }
+    return null
+  }
+
   _getPropByKey(key) {
     for (const [propKey, propValue] of Object.entries(this.$value)) {
       if (propKey === key) {
@@ -166,7 +186,10 @@ export default class PropObject {
     // -- Text
     const propKeyNameElement = document.createElement('div')
     propKeyNameElement.classList.add('ir__prop-kname')
-    propKeyNameElement.innerHTML = key
+    const nameBoxElement = document.createElement('span')
+    nameBoxElement.classList.add('ir__prop-kname__kname-box')
+    nameBoxElement.innerHTML = key
+    propKeyNameElement.appendChild(nameBoxElement)
     const keyNameColonElement = document.createElement('div')
     keyNameColonElement.classList.add('ir__prop-kname__colon')
     keyNameColonElement.innerHTML = ':'
@@ -230,7 +253,10 @@ export default class PropObject {
     // -- Text
     const propKeyNameElement = document.createElement('div')
     propKeyNameElement.classList.add('ir__prop-kname')
-    propKeyNameElement.innerHTML = key
+    const nameBoxElement = document.createElement('span')
+    nameBoxElement.classList.add('ir__prop-kname__kname-box')
+    nameBoxElement.innerHTML = key
+    propKeyNameElement.appendChild(nameBoxElement)
     const keyNameColonElement = document.createElement('div')
     keyNameColonElement.classList.add('ir__prop-kname__colon')
     keyNameColonElement.innerHTML = ':'
@@ -282,7 +308,10 @@ export default class PropObject {
     // Building: prop key
     const nameElement = document.createElement('div')
     nameElement.classList.add('ir__prop-name')
-    nameElement.innerHTML = key
+    const nameBoxElement = document.createElement('span')
+    nameBoxElement.classList.add('ir__prop-kname__kname-box')
+    nameBoxElement.innerHTML = key
+    nameElement.appendChild(nameBoxElement)
     const keyNameColonElement = document.createElement('div')
     keyNameColonElement.classList.add('ir__prop-kname__colon')
     keyNameColonElement.innerHTML = ':'
@@ -299,6 +328,12 @@ export default class PropObject {
     return element
   }
 
+  _propToolbarActionCallback(_, propName) {
+    const element = this._getDOMPropKeyElement(propName)
+    element.setAttribute('data-ir-action', 'delete')
+    this._computeDOM()
+  }
+
   _onKNameBoxClick(e) {
     const propElement = findElementParentByClass(e.target, 'ir__prop')
     const propKeyName = propElement.getAttribute('data-ir-prop-key')
@@ -308,19 +343,39 @@ export default class PropObject {
   }
 
   _onPropBoxMouseOver(e) {
-    const propElement = findElementParentByClass(
+    const propContentElement = findElementParentByClass(
       e.target,
       'ir__prop-content',
     )
-    this._propToolbar.setTargetElement(propElement)
+    const propElement = findElementParentByClass(
+      e.target,
+      'ir__prop',
+    )
+    const propName = propElement.getAttribute('data-ir-prop-key')
+    this._propToolbar.setTarget(
+      this.$value,
+      propName,
+      propContentElement,
+      this._propToolbarActionCallback.bind(this),
+    )
   }
 
   _onKNameBoxMouseOver(e) {
-    const propElement = findElementParentByClass(
+    const propContentElement = findElementParentByClass(
       e.target,
       'ir__prop-kname__content',
     )
-    this._propToolbar.setTargetElement(propElement)
+    const propElement = findElementParentByClass(
+      e.target,
+      'ir__prop',
+    )
+    const propName = propElement.getAttribute('data-ir-prop-key')
+    this._propToolbar.setTarget(
+      this.$value,
+      propName,
+      propContentElement,
+      this._propToolbarActionCallback.bind(this),
+    )
   }
 
   _onKNameBoxMouseOut(_) {

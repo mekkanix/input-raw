@@ -11,6 +11,9 @@ export default class PropToolbar {
   _actions = []
   _rootElement = null
   attachedElement = document.createElement('div')
+  _targetPropName = null
+  _targetCallback = null
+  _targetScope = null
   targetElement = null
   isActive = false
   state = {
@@ -36,44 +39,45 @@ export default class PropToolbar {
         name: 'edit',
         enabled: s => s.initialized && s.editable && !s.editing,
         class: 'edit',
-        eventHandler: this._onEditClick,
+        eventHandler: this._onEditClick.bind(this),
         icon: 'edit',
       },
       {
         name: 'validate_edit',
         enabled: s => s.editable && s.editing && !s.errored,
         class: 'validate-edit',
-        eventHandler: this._onValidateEditClick,
+        eventHandler: this._onValidateEditClick.bind(this),
         icon: 'check',
       },
       {
         name: 'cancel_edit',
         enabled: s => s.editable && s.editing,
         class: 'cancel-edit',
-        eventHandler: this._onCancelEditClick,
+        eventHandler: this._onCancelEditClick.bind(this),
         icon: 'times',
       },
       {
         name: 'delete',
         enabled: s => s.initialized,
         class: 'delete',
-        eventHandler: this._onDeleteClick,
+        eventHandler: this._onDeleteClick.bind(this),
         icon: 'trash',
       },
-      {
-        name: 'convert_to_object',
-        enabled: s => s.initialized && s.toObject,
-        class: 'convert2object',
-        eventHandler: this._onConvertToObjectClick,
-        text: '{}',
-      },
-      {
-        name: 'convert_to_array',
-        enabled: s => s.initialized && s.toArray,
-        class: 'convert2array',
-        eventHandler: this._onConvertToArrayClick,
-        text: '[]',
-      },
+      // TODO: Later.
+      // {
+      //   name: 'convert_to_object',
+      //   enabled: s => s.initialized && s.toObject,
+      //   class: 'convert2object',
+      //   eventHandler: this._onConvertToObjectClick.bind(this),
+      //   text: '{}',
+      // },
+      // {
+      //   name: 'convert_to_array',
+      //   enabled: s => s.initialized && s.toArray,
+      //   class: 'convert2array',
+      //   eventHandler: this._onConvertToArrayClick.bind(this),
+      //   text: '[]',
+      // },
     ]
     this._actions = actions
   }
@@ -166,9 +170,13 @@ export default class PropToolbar {
     const isHovering = findElementParentByClass(e.target, 'ir__prop-toolbar')
     if (!this.targetElement && !isHovering) {
       this.isActive = false
-      this.resetTargetElement()
+      this.computeDOM()
     }
   }
+
+  /**
+   * Buttons' handlers
+   */
 
   _onEditClick(e) {
     console.log(e);
@@ -183,18 +191,38 @@ export default class PropToolbar {
   }
 
   _onDeleteClick(e) {
-    console.log(e);
+    const cb = this._targetCallback
+    if (this._targetScope && cb && typeof cb === 'function') {
+      // Clean removal of raw property (array, object)
+      if (Array.isArray(this._targetScope)) {
+        const idx = parseInt(this._targetPropName)
+        this._targetScope.splice(idx, 1)
+      } else if (typeof this._targetScope === 'object') {
+        delete this._targetScope[this._targetPropName]
+      }
+      // By-prop callback
+      this._targetCallback('delete', this._targetPropName)
+      // Reset internal `targetElement`-related data
+      // this._targetScope = null
+      // this._targetCallback = null
+      // Reset local DOM
+      this.isActive = false
+      this.computeDOM()
+    }
   }
 
-  _onConvertToObjectClick(e) {
-    console.log(e);
-  }
+  // _onConvertToObjectClick(e) {
+  //   console.log(e);
+  // }
 
-  _onConvertToArrayClick(e) {
-    console.log(e);
-  }
+  // _onConvertToArrayClick(e) {
+  //   console.log(e);
+  // }
 
-  setTargetElement(element) {
+  setTarget(scope, propName, element, actionCallback) {
+    this._targetScope = scope
+    this._targetPropName = propName
+    this._targetCallback = actionCallback
     this.targetElement = element
     this.isActive = true
     this.computeDOM()
