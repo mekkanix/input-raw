@@ -83,7 +83,7 @@ export default class PropArray {
         }
       }
     }
-    // Processing: indexes updates
+    // Processing: in-DOM indexes updates
     // Note: This process is separated from the "actions" loop in
     // order to use an updated DOM for updating indexes.
     const children = this._propWrapperElement.children

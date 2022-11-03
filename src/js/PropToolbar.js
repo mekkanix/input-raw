@@ -131,18 +131,40 @@ export default class PropToolbar {
     )
   }
 
-  computeDOM() {
-    // Base handlers
-    const enabled = !!this.targetElement
-    if (enabled) {
-      this._handleEnabledState()
-    } else {
-      this._handleDisabledState()
+  _prepareStateFromPropType(type) {
+    switch (type) {
+      case 'primitive':
+        this._updateState('editable', true, false)
+        break
+      case 'object':
+        this._updateState('editable', true, false)
+        break
+      case 'array':
+        this._updateState('editable', true, false)
+        break
     }
-    // Actions
-    for (const action of this._actions) {
-      const enabled = action.enabled(this.state)
-      action.attachedElement.style.display = enabled ? 'flex' : 'none'
+  }
+
+  _updateState(prop, value, compute = true) {
+    if (this.state.hasOwnProperty(prop)) {
+      this.state[prop] = value
+    }
+    if (compute) {
+      this.computeDOM()
+    }
+  }
+
+  _resetState(compute = true) {
+    this.state = {
+      initialized: false,
+      editing: false,
+      editable: false,
+      errored: false,
+      toObject: false,
+      toArray: false,
+    }
+    if (compute) {
+      this.computeDOM()
     }
   }
 
@@ -179,7 +201,7 @@ export default class PropToolbar {
    */
 
   _onEditClick(e) {
-    console.log(e);
+    this._updateState('editing', true)
   }
 
   _onValidateEditClick(e) {
@@ -187,7 +209,7 @@ export default class PropToolbar {
   }
 
   _onCancelEditClick(e) {
-    console.log(e);
+    this._updateState('editing', false)
   }
 
   _onDeleteClick(e) {
@@ -203,11 +225,11 @@ export default class PropToolbar {
       // By-prop callback
       this._targetCallback('delete', this._targetPropName)
       // Reset internal `targetElement`-related data
-      // this._targetScope = null
-      // this._targetCallback = null
+      this._targetScope = null
+      this._targetCallback = null
       // Reset local DOM
       this.isActive = false
-      this.computeDOM()
+      this._resetState()
     }
   }
 
@@ -219,24 +241,40 @@ export default class PropToolbar {
   //   console.log(e);
   // }
 
+  computeDOM() {
+    // Actions
+    for (const action of this._actions) {
+      const enabled = action.enabled(this.state)
+      action.attachedElement.style.display = enabled ? 'flex' : 'none'
+    }
+    if (this.state.initialized) {
+      // Base handlers
+      const enabled = !!this.targetElement
+      if (enabled) {
+        this._handleEnabledState()
+      } else {
+        this._handleDisabledState()
+      }
+    }
+  }
+
   setTarget(scope, propName, element, actionCallback) {
+    // Store prop data
     this._targetScope = scope
     this._targetPropName = propName
     this._targetCallback = actionCallback
     this.targetElement = element
     this.isActive = true
-    this.computeDOM()
+    //
+    const prop = scope[propName]
+    this._prepareStateFromPropType(prop.propType)
+    this._updateState('initialized', true)
   }
 
   resetTargetElement() {
     this.targetElement = null
-    this.computeDOM()
-  }
-
-  updateState(prop, value) {
-    if (this.state.hasOwnProperty(prop)) {
-      this.state[prop] = value
+    if (!this.isActive) {
+      this._resetState()
     }
-    this.computeDOM()
   }
 }
