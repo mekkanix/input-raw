@@ -4,6 +4,7 @@ import {
 } from '@fortawesome/fontawesome-svg-core'
 import {
   findElementParentByClass,
+  findElementChildByClass,
   getElementOffsetFromParent,
 } from './helpers/DOM.js'
 
@@ -13,7 +14,7 @@ export default class PropToolbar {
   attachedElement = document.createElement('div')
   _targetPropName = null
   _targetCallback = null
-  _targetScope = null
+  _targetScopeProp = null
   targetElement = null
   isActive = false
   state = {
@@ -201,9 +202,13 @@ export default class PropToolbar {
    */
 
   _onEditClick(e) {
-    const prop = this._targetScope[this._targetPropName]
-    console.log(prop, findElementParentByClass(prop.attachedElement, 'ir__prop-content'));
-    this._updateState('editing', true)
+    const scopeProp = this._targetScopeProp
+    // const prop = scopeProp.$value[this._targetPropName]
+    // console.log('[scopeProp]', scopeProp);
+    // console.log('[prop]', prop);
+    scopeProp.setPropEditMode(this._targetPropName, true)
+    // scopeProp.setPropEdit(this._targetPropName, true)
+    // this._updateState('editing', true)
   }
 
   _onValidateEditClick(e) {
@@ -216,18 +221,19 @@ export default class PropToolbar {
 
   _onDeleteClick(e) {
     const cb = this._targetCallback
-    if (this._targetScope && cb && typeof cb === 'function') {
+    console.log(e);
+    if (this._targetScopeProp && cb && typeof cb === 'function') {
       // Clean removal of raw property (array, object)
-      if (Array.isArray(this._targetScope)) {
+      if (this._targetScopeProp.propType === 'array') {
         const idx = parseInt(this._targetPropName)
-        this._targetScope.splice(idx, 1)
-      } else if (typeof this._targetScope === 'object') {
-        delete this._targetScope[this._targetPropName]
+        this._targetScopeProp.$value.splice(idx, 1)
+      } else if (this._targetScopeProp.propType === 'object') {
+        delete this._targetScopeProp.$value[this._targetPropName]
       }
       // By-prop callback
       this._targetCallback('delete', this._targetPropName)
       // Reset internal `targetElement`-related data
-      this._targetScope = null
+      this._targetScopeProp = null
       this._targetCallback = null
       // Reset local DOM
       this.isActive = false
@@ -249,27 +255,25 @@ export default class PropToolbar {
       const enabled = action.enabled(this.state)
       action.attachedElement.style.display = enabled ? 'flex' : 'none'
     }
-    if (this.state.initialized) {
-      // Base handlers
-      const enabled = !!this.targetElement
-      if (enabled) {
-        this._handleEnabledState()
-      } else {
-        this._handleDisabledState()
-      }
+    // Base handlers
+    const enabled = !!this.targetElement
+    if (this.state.initialized && enabled) {
+      this._handleEnabledState()
+    } else {
+      this._handleDisabledState()
     }
   }
 
-  setTarget(scope, propName, element, actionCallback) {
+  setTarget(scopeProp, propName, element, actionCallback) {
     if (!this.state.editing) {
       // Store prop data
-      this._targetScope = scope
+      this._targetScopeProp = scopeProp
       this._targetPropName = propName
       this._targetCallback = actionCallback
       this.targetElement = element
       this.isActive = true
       //
-      const prop = scope[propName]
+      const prop = scopeProp.$value[propName]
       this._prepareStateFromPropType(prop.propType)
       this._updateState('initialized', true)
     }

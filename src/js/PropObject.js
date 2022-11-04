@@ -4,7 +4,8 @@ import {
 } from '@fortawesome/fontawesome-svg-core'
 import {
   findElementParentByClass,
-  findElementChildByAttrValue,
+  findElementChildByAttr,
+  findElementChildByAttr2,
 } from './helpers/DOM.js'
 
 export default class PropObject {
@@ -28,6 +29,12 @@ export default class PropObject {
   _propWrapperElement = null
   _placeholderElement = null
   _propToolbar = null
+  _editedProp = {
+    name: null,
+    tmpNameElement: null,
+    tmpValueElement: null,
+    _dirty: false,
+  }
   propType = 'object'
   $value = {}
   state = {
@@ -123,6 +130,10 @@ export default class PropObject {
         this._propParentElement.classList.remove('ir__prop--open')
       }
     }
+    // Processing: "editing" state
+    // if (this.state.editing) {
+      console.log(this._editedProp);
+    // }
   }
 
   _hasDOMPropKey(key) {
@@ -165,7 +176,7 @@ export default class PropObject {
     // -- Events
     nameElement.addEventListener(
       'click',
-      this._onKNameBoxClick.bind(this)
+      this._onPropBoxClick.bind(this)
     )
     nameElement.addEventListener(
       'mouseover',
@@ -187,6 +198,7 @@ export default class PropObject {
     const propKeyNameElement = document.createElement('div')
     propKeyNameElement.classList.add('ir__prop-kname')
     const nameBoxElement = document.createElement('span')
+    nameBoxElement.setAttribute('data-ir-pph-name', '')
     nameBoxElement.classList.add('ir__prop-kname__kname-box')
     nameBoxElement.innerHTML = key
     propKeyNameElement.appendChild(nameBoxElement)
@@ -232,7 +244,7 @@ export default class PropObject {
     // -- Events
     nameElement.addEventListener(
       'click',
-      this._onKNameBoxClick.bind(this)
+      this._onPropBoxClick.bind(this)
     )
     nameElement.addEventListener(
       'mouseover',
@@ -254,6 +266,7 @@ export default class PropObject {
     const propKeyNameElement = document.createElement('div')
     propKeyNameElement.classList.add('ir__prop-kname')
     const nameBoxElement = document.createElement('span')
+    nameBoxElement.setAttribute('data-ir-pph-name', '')
     nameBoxElement.classList.add('ir__prop-kname__kname-box')
     nameBoxElement.innerHTML = key
     propKeyNameElement.appendChild(nameBoxElement)
@@ -309,6 +322,7 @@ export default class PropObject {
     const nameElement = document.createElement('div')
     nameElement.classList.add('ir__prop-name')
     const nameBoxElement = document.createElement('span')
+    nameBoxElement.setAttribute('data-ir-pph-name', '')
     nameBoxElement.classList.add('ir__prop-kname__kname-box')
     nameBoxElement.innerHTML = key
     nameElement.appendChild(nameBoxElement)
@@ -334,7 +348,7 @@ export default class PropObject {
     this._computeDOM()
   }
 
-  _onKNameBoxClick(e) {
+  _onPropBoxClick(e) {
     const propElement = findElementParentByClass(e.target, 'ir__prop')
     const propKeyName = propElement.getAttribute('data-ir-prop-key')
     const prop = this._getPropByKey(propKeyName)
@@ -353,7 +367,7 @@ export default class PropObject {
     )
     const propName = propElement.getAttribute('data-ir-prop-key')
     this._propToolbar.setTarget(
-      this.$value,
+      this,
       propName,
       propContentElement,
       this._propToolbarActionCallback.bind(this),
@@ -384,10 +398,31 @@ export default class PropObject {
     }
   }
 
-  updateState(state, value) {
-    const stateValue = this.state[state]
-    if (this.state.hasOwnProperty(state) && stateValue !== value) {
+  setPropEditMode(propName, state) {
+    if (this.$value.hasOwnProperty(propName)) {
+      const propBoxElement = findElementChildByAttr(
+        this._propWrapperElement,
+        'data-ir-prop-key',
+        propName,
+      )
+      this._editedProp.name = state ? propName : null
+      this._editedProp.tmpNameElement = findElementChildByAttr2(
+        propBoxElement,
+        'data-ir-pph-name',
+      )
+      this._editedProp.tmpValueElement = findElementChildByAttr2(
+        propBoxElement,
+        'data-ir-pph-value',
+      )
+      this.updateState('editing', true)
+    }
+  }
+
+  updateState(state, value, compute = true) {
+    if (this.state.hasOwnProperty(state)) {
       this.state[state] = value
+    }
+    if (compute) {
       this._computeDOM()
     }
   }

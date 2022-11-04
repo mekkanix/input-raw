@@ -41,6 +41,7 @@ export default class PropPrimitive {
 
   _initDOM() {
     // Base
+    this.attachedElement.setAttribute('data-ir-pph-value', '')
     this.attachedElement.classList.add('ir__primitive-value')
   }
 

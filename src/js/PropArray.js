@@ -178,7 +178,7 @@ export default class PropArray {
     // -- Events
     nameElement.addEventListener(
       'click',
-      this._onKNameBoxClick.bind(this)
+      this._onPropBoxClick.bind(this)
     )
     nameElement.addEventListener(
       'mouseover',
@@ -200,6 +200,7 @@ export default class PropArray {
     const idxElement = document.createElement('div')
     idxElement.classList.add('ir__prop-kname__idx')
     const idxBoxElement = document.createElement('span')
+    idxBoxElement.setAttribute('data-ir-pph-name', '')
     idxBoxElement.classList.add('ir__prop-kname__idx-box')
     idxBoxElement.innerHTML = index
     idxElement.appendChild(idxBoxElement)
@@ -245,7 +246,7 @@ export default class PropArray {
     // -- Events
     nameElement.addEventListener(
       'click',
-      this._onKNameBoxClick.bind(this)
+      this._onPropBoxClick.bind(this)
     )
     nameElement.addEventListener(
       'mouseover',
@@ -267,6 +268,7 @@ export default class PropArray {
     const idxElement = document.createElement('div')
     idxElement.classList.add('ir__prop-kname__idx')
     const idxBoxElement = document.createElement('span')
+    idxBoxElement.setAttribute('data-ir-pph-name', '')
     idxBoxElement.classList.add('ir__prop-kname__idx-box')
     idxBoxElement.innerHTML = index
     idxElement.appendChild(idxBoxElement)
@@ -326,6 +328,7 @@ export default class PropArray {
     const idxElement = document.createElement('div')
     idxElement.classList.add('ir__prop-kname__idx')
     const idxBoxElement = document.createElement('span')
+    idxBoxElement.setAttribute('data-ir-pph-name', '')
     idxBoxElement.classList.add('ir__prop-kname__idx-box')
     idxBoxElement.innerHTML = key
     idxElement.appendChild(idxBoxElement)
@@ -351,7 +354,7 @@ export default class PropArray {
     this._computeDOM()
   }
 
-  _onKNameBoxClick(e) {
+  _onPropBoxClick(e) {
     const propElement = findElementParentByClass(e.target, 'ir__prop')
     const propKeyName = propElement.getAttribute('data-ir-prop-idx')
     const prop = this._getPropByKey(propKeyName)
@@ -370,7 +373,7 @@ export default class PropArray {
     )
     const propName = propElement.getAttribute('data-ir-prop-idx')
     this._propToolbar.setTarget(
-      this.$value,
+      this,
       propName,
       propContentElement,
       this._propToolbarActionCallback.bind(this),
@@ -386,10 +389,11 @@ export default class PropArray {
     this._computeDOM()
   }
 
-  updateState(state, value) {
-    const stateValue = this.state[state]
-    if (this.state.hasOwnProperty(state) && stateValue !== value) {
+  updateState(state, value, compute = true) {
+    if (this.state.hasOwnProperty(state)) {
       this.state[state] = value
+    }
+    if (compute) {
       this._computeDOM()
     }
   }

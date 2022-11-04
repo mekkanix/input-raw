@@ -8,6 +8,10 @@ export const getElementChildByPropKey = (element, key) => {
   return null
 }
 
+/**
+ * Find-by: CSS class
+ */
+
 export const getElementChildByClass = (element, cssClass) => {
   for (const child of element.children) {
     if (child.classList.contains(cssClass)) {
@@ -33,6 +37,43 @@ export const findElementParentByClass = (element, cssClass) => {
     return element
   } else if (element.parentElement) {
     return findElementParentByClass(element.parentElement, cssClass)
+  }
+  return null
+}
+
+/**
+ * Find-by: Attr
+ */
+
+ export const findElementChildByAttr = (element, name, val = null) => {
+  for (const child of element.children) {
+    if (child.hasAttribute(name)) {
+      if (val == null) {
+        return child
+      } else {
+        const value = child.getAttribute(name)
+        if (val === value) {
+          return child
+        }
+      }
+    } else {
+      return findElementChildByAttr(child, name, val)
+    }
+  }
+  return null
+}
+export const findElementChildByAttr2 = (element, name, val = null) => {
+  for (const child of element.children) {
+    const hasAttrWithVal = val && child.getAttribute(name) == val
+    const hasAttrWithoutVal = val == null && child.hasAttribute(name)
+    if (hasAttrWithoutVal || hasAttrWithVal) {
+      return child
+    } else {
+      const nestedChild = findElementChildByAttr2(child, name, val)
+      if (nestedChild) {
+        return nestedChild
+      }
+    }
   }
   return null
 }
