@@ -5,7 +5,6 @@ import {
 import {
   findElementParentByClass,
   findElementChildByAttr,
-  findElementChildByAttr2,
 } from './helpers/DOM.js'
 
 export default class PropObject {
@@ -31,9 +30,12 @@ export default class PropObject {
   _propToolbar = null
   _editedProp = {
     name: null,
+    value: null,
+    element: null,
     tmpNameElement: null,
     tmpValueElement: null,
-    _dirty: false,
+    nameInputElement: null,
+    valueInputElement: null,
   }
   propType = 'object'
   $value = {}
@@ -131,9 +133,35 @@ export default class PropObject {
       }
     }
     // Processing: "editing" state
-    // if (this.state.editing) {
-      console.log(this._editedProp);
-    // }
+    const nameElement = this._editedProp.tmpNameElement
+    const valueElement = this._editedProp.tmpValueElement
+    const nameInput = this._editedProp.nameInputElement
+    const valueInput = this._editedProp.valueInputElement
+    if (this.state.editing) {
+      if (!document.body.contains(nameInput)) {
+        nameElement.innerHTML = ''
+        nameElement.appendChild(nameInput)
+      }
+      if (!document.body.contains(valueInput)) {
+        valueElement.innerHTML = ''
+        valueElement.appendChild(valueInput)
+      }
+    } else {
+      const propElement = this._editedProp.element
+      if (propElement) {
+        const pendingAction = propElement.getAttribute('data-ir-action')
+        if (pendingAction === 'cancel_edit') {
+          if (document.body.contains(nameInput)) {
+            nameInput.remove()
+            nameElement.innerText = this._editedProp.name
+          }
+          if (document.body.contains(valueInput)) {
+            valueInput.remove()
+            valueElement.innerText = this._editedProp.value
+          }
+        }
+      }
+    }
   }
 
   _hasDOMPropKey(key) {
@@ -197,9 +225,9 @@ export default class PropObject {
     // -- Text
     const propKeyNameElement = document.createElement('div')
     propKeyNameElement.classList.add('ir__prop-kname')
-    const nameBoxElement = document.createElement('span')
+    const nameBoxElement = document.createElement('div')
     nameBoxElement.setAttribute('data-ir-pph-name', '')
-    nameBoxElement.classList.add('ir__prop-kname__kname-box')
+    nameBoxElement.classList.add('ir__prop-kname-box')
     nameBoxElement.innerHTML = key
     propKeyNameElement.appendChild(nameBoxElement)
     const keyNameColonElement = document.createElement('div')
@@ -265,9 +293,9 @@ export default class PropObject {
     // -- Text
     const propKeyNameElement = document.createElement('div')
     propKeyNameElement.classList.add('ir__prop-kname')
-    const nameBoxElement = document.createElement('span')
+    const nameBoxElement = document.createElement('div')
     nameBoxElement.setAttribute('data-ir-pph-name', '')
-    nameBoxElement.classList.add('ir__prop-kname__kname-box')
+    nameBoxElement.classList.add('ir__prop-kname-box')
     nameBoxElement.innerHTML = key
     propKeyNameElement.appendChild(nameBoxElement)
     const keyNameColonElement = document.createElement('div')
@@ -321,9 +349,9 @@ export default class PropObject {
     // Building: prop key
     const nameElement = document.createElement('div')
     nameElement.classList.add('ir__prop-name')
-    const nameBoxElement = document.createElement('span')
+    const nameBoxElement = document.createElement('div')
     nameBoxElement.setAttribute('data-ir-pph-name', '')
-    nameBoxElement.classList.add('ir__prop-kname__kname-box')
+    nameBoxElement.classList.add('ir__prop-kname-box')
     nameBoxElement.innerHTML = key
     nameElement.appendChild(nameBoxElement)
     const keyNameColonElement = document.createElement('div')
@@ -342,9 +370,9 @@ export default class PropObject {
     return element
   }
 
-  _propToolbarActionCallback(_, propName) {
+  _propToolbarActionCallback(actionType, propName) {
     const element = this._getDOMPropKeyElement(propName)
-    element.setAttribute('data-ir-action', 'delete')
+    element.setAttribute('data-ir-action', actionType)
     this._computeDOM()
   }
 
@@ -378,6 +406,60 @@ export default class PropObject {
     this._propToolbar.resetTargetElement()
   }
 
+  _onPropInputKeyDown(_) {
+    console.log('ok');
+  }
+
+  enablePropEditMode(propName) {
+    if (this.$value.hasOwnProperty(propName)) {
+      const propElement = findElementChildByAttr(
+        this._propWrapperElement,
+        'data-ir-prop-key',
+        propName,
+      )
+      this._editedProp.tmpNameElement = findElementChildByAttr(
+        propElement,
+        'data-ir-pph-name',
+      )
+      this._editedProp.tmpValueElement = findElementChildByAttr(
+        propElement,
+        'data-ir-pph-value',
+      )
+      const nameElement = this._editedProp.tmpNameElement
+      const valueElement = this._editedProp.tmpValueElement
+      this._editedProp.name = propName
+      this._editedProp.value = valueElement.innerText
+      this._editedProp.element = propElement
+      const nameInput = document.createElement('input')
+      const valueInput = document.createElement('input')
+      nameInput.setAttribute('type', 'text')
+      nameInput.setAttribute('value', nameElement.innerText)
+      nameInput.style.width = `${nameElement.clientWidth}px`
+      nameInput.addEventListener(
+        'keyup',
+        this._onPropInputKeyDown.bind(this),
+      )
+      valueInput.setAttribute('type', 'text')
+      valueInput.setAttribute('value', this._editedProp.value)
+      valueInput.style.width = `${valueElement.clientWidth}px`
+      this._editedProp.nameInputElement = nameInput
+      this._editedProp.valueInputElement = valueInput
+      this.updateState('editing', true)
+    }
+  }
+
+  cancelPropEditMode(propName) {
+    if (this.$value.hasOwnProperty(propName)) {
+      this.updateState('editing', false)
+      // this._editedProp.name = null
+      // this._editedProp.element = null
+      // this._editedProp.nameInputElement = null
+      // this._editedProp.valueInputElement = null
+      // this._editedProp.tmpNameElement = null
+      // this._editedProp.tmpValueElement = null
+    }
+  }
+
   setProp(key, value) {
     if (!this.$value.hasOwnProperty(key)) {
       this.$value[key] = value
@@ -395,26 +477,6 @@ export default class PropObject {
           existingProp.setValue(value.value)
           break
       }
-    }
-  }
-
-  setPropEditMode(propName, state) {
-    if (this.$value.hasOwnProperty(propName)) {
-      const propBoxElement = findElementChildByAttr(
-        this._propWrapperElement,
-        'data-ir-prop-key',
-        propName,
-      )
-      this._editedProp.name = state ? propName : null
-      this._editedProp.tmpNameElement = findElementChildByAttr2(
-        propBoxElement,
-        'data-ir-pph-name',
-      )
-      this._editedProp.tmpValueElement = findElementChildByAttr2(
-        propBoxElement,
-        'data-ir-pph-value',
-      )
-      this.updateState('editing', true)
     }
   }
 

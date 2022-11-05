@@ -92,7 +92,7 @@ export default class PropArray {
       element.setAttribute('data-ir-prop-idx', i)
       const idxElement = findElementChildByClass(
         element,
-        'ir__prop-kname__idx-box',
+        'ir__prop-idx-box',
       )
       idxElement.innerText = i
     }
@@ -198,10 +198,10 @@ export default class PropArray {
     keyIcnElement.innerHTML = icnHTML
     // -- Text
     const idxElement = document.createElement('div')
-    idxElement.classList.add('ir__prop-kname__idx')
-    const idxBoxElement = document.createElement('span')
+    idxElement.classList.add('ir__prop-idx')
+    const idxBoxElement = document.createElement('div')
     idxBoxElement.setAttribute('data-ir-pph-name', '')
-    idxBoxElement.classList.add('ir__prop-kname__idx-box')
+    idxBoxElement.classList.add('ir__prop-idx-box')
     idxBoxElement.innerHTML = index
     idxElement.appendChild(idxBoxElement)
     const idxColonElement = document.createElement('div')
@@ -266,10 +266,10 @@ export default class PropArray {
     keyIcnElement.innerHTML = icnHTML
     // -- Text
     const idxElement = document.createElement('div')
-    idxElement.classList.add('ir__prop-kname__idx')
-    const idxBoxElement = document.createElement('span')
+    idxElement.classList.add('ir__prop-idx')
+    const idxBoxElement = document.createElement('div')
     idxBoxElement.setAttribute('data-ir-pph-name', '')
-    idxBoxElement.classList.add('ir__prop-kname__idx-box')
+    idxBoxElement.classList.add('ir__prop-idx-box')
     idxBoxElement.innerHTML = index
     idxElement.appendChild(idxBoxElement)
     const idxColonElement = document.createElement('div')
@@ -326,10 +326,10 @@ export default class PropArray {
     const keyNameContentElement = document.createElement('div')
     keyNameContentElement.classList.add('ir__prop-content')
     const idxElement = document.createElement('div')
-    idxElement.classList.add('ir__prop-kname__idx')
-    const idxBoxElement = document.createElement('span')
+    idxElement.classList.add('ir__prop-idx')
+    const idxBoxElement = document.createElement('div')
     idxBoxElement.setAttribute('data-ir-pph-name', '')
-    idxBoxElement.classList.add('ir__prop-kname__idx-box')
+    idxBoxElement.classList.add('ir__prop-idx-box')
     idxBoxElement.innerHTML = key
     idxElement.appendChild(idxBoxElement)
     const idxColonElement = document.createElement('div')

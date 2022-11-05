@@ -202,13 +202,8 @@ export default class PropToolbar {
    */
 
   _onEditClick(e) {
-    const scopeProp = this._targetScopeProp
-    // const prop = scopeProp.$value[this._targetPropName]
-    // console.log('[scopeProp]', scopeProp);
-    // console.log('[prop]', prop);
-    scopeProp.setPropEditMode(this._targetPropName, true)
-    // scopeProp.setPropEdit(this._targetPropName, true)
-    // this._updateState('editing', true)
+    this._updateState('editing', true)
+    this._targetScopeProp.enablePropEditMode(this._targetPropName)
   }
 
   _onValidateEditClick(e) {
@@ -217,6 +212,8 @@ export default class PropToolbar {
 
   _onCancelEditClick(e) {
     this._updateState('editing', false)
+    this._targetCallback('cancel_edit', this._targetPropName)
+    this._targetScopeProp.cancelPropEditMode(this._targetPropName)
   }
 
   _onDeleteClick(e) {

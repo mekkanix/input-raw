@@ -1,3 +1,8 @@
+/**
+ * Find-by: Custom attribute
+ * Deprecated (-> findElementChildByAttr).
+ */
+
 export const getElementChildByPropKey = (element, key) => {
   for (const child of element.children) {
     const childAttrValue = child.getAttribute('data-ir-prop-key')
@@ -44,32 +49,14 @@ export const findElementParentByClass = (element, cssClass) => {
 /**
  * Find-by: Attr
  */
-
- export const findElementChildByAttr = (element, name, val = null) => {
-  for (const child of element.children) {
-    if (child.hasAttribute(name)) {
-      if (val == null) {
-        return child
-      } else {
-        const value = child.getAttribute(name)
-        if (val === value) {
-          return child
-        }
-      }
-    } else {
-      return findElementChildByAttr(child, name, val)
-    }
-  }
-  return null
-}
-export const findElementChildByAttr2 = (element, name, val = null) => {
+export const findElementChildByAttr = (element, name, val = null) => {
   for (const child of element.children) {
     const hasAttrWithVal = val && child.getAttribute(name) == val
     const hasAttrWithoutVal = val == null && child.hasAttribute(name)
     if (hasAttrWithoutVal || hasAttrWithVal) {
       return child
     } else {
-      const nestedChild = findElementChildByAttr2(child, name, val)
+      const nestedChild = findElementChildByAttr(child, name, val)
       if (nestedChild) {
         return nestedChild
       }
