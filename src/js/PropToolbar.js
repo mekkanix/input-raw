@@ -207,7 +207,9 @@ export default class PropToolbar {
   }
 
   _onValidateEditClick(e) {
-    console.log(e);
+    this._updateState('editing', false)
+    this._targetCallback('validate_edit', this._targetPropName)
+    this._targetScopeProp.validatePropEditMode(this._targetPropName)
   }
 
   _onCancelEditClick(e) {

@@ -160,6 +160,18 @@ export default class PropObject {
             valueElement.innerText = this._editedProp.value
           }
         }
+        if (pendingAction === 'validate_edit') {
+          if (document.body.contains(nameInput)) {
+            const inputVal = nameInput.value
+            nameInput.remove()
+            nameElement.innerText = inputVal
+          }
+          if (document.body.contains(valueInput)) {
+            const inputVal = valueInput.value
+            valueInput.remove()
+            valueElement.innerText = inputVal
+          }
+        }
       }
     }
   }
@@ -451,6 +463,18 @@ export default class PropObject {
   cancelPropEditMode(propName) {
     if (this.$value.hasOwnProperty(propName)) {
       this.updateState('editing', false)
+      this._editedProp.name = null
+      this._editedProp.element = null
+      this._editedProp.nameInputElement = null
+      this._editedProp.valueInputElement = null
+      this._editedProp.tmpNameElement = null
+      this._editedProp.tmpValueElement = null
+    }
+  }
+
+  validatePropEditMode(propName) {
+    if (this.$value.hasOwnProperty(propName)) {
+      // this.updateState('editing', false)
       // this._editedProp.name = null
       // this._editedProp.element = null
       // this._editedProp.nameInputElement = null
