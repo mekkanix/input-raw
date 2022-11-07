@@ -159,6 +159,7 @@ export default class PropObject {
             valueInput.remove()
             valueElement.innerText = this._editedProp.value
           }
+          propElement.removeAttribute('data-ir-action')
         }
         if (pendingAction === 'validate_edit') {
           if (document.body.contains(nameInput)) {
@@ -171,6 +172,7 @@ export default class PropObject {
             valueInput.remove()
             valueElement.innerText = inputVal
           }
+          propElement.removeAttribute('data-ir-action')
         }
       }
     }
@@ -481,13 +483,13 @@ export default class PropObject {
 
   validatePropEditMode(propName) {
     if (this.$value.hasOwnProperty(propName)) {
-      // this.updateState('editing', false)
-      // this._editedProp.name = null
-      // this._editedProp.element = null
-      // this._editedProp.nameInputElement = null
-      // this._editedProp.valueInputElement = null
-      // this._editedProp.tmpNameElement = null
-      // this._editedProp.tmpValueElement = null
+      this.updateState('editing', false)
+      this._editedProp.name = null
+      this._editedProp.element = null
+      this._editedProp.nameInputElement = null
+      this._editedProp.valueInputElement = null
+      this._editedProp.tmpNameElement = null
+      this._editedProp.tmpValueElement = null
     }
   }
 
