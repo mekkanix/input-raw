@@ -186,6 +186,11 @@ export default class PropObject {
     return false
   }
 
+  _isEditingChild(propKey) {
+    const nestedProp = this.$value[propKey]
+    return nestedProp && nestedProp.state.editing
+  }
+
   _getDOMPropKeyElement(key) {
     for (const element of this._propWrapperElement.children) {
       const propKey = element.getAttribute('data-ir-prop-key')
@@ -391,9 +396,11 @@ export default class PropObject {
   _onPropBoxClick(e) {
     const propElement = findElementParentByClass(e.target, 'ir__prop')
     const propKeyName = propElement.getAttribute('data-ir-prop-key')
-    const prop = this._getPropByKey(propKeyName)
-    prop.updateState('open', !prop.state.open)
-    this._propToolbar.computeDOM()
+    if (!this._isEditingChild(propKeyName)) {
+      const prop = this._getPropByKey(propKeyName)
+      prop.updateState('open', !prop.state.open)
+      this._propToolbar.computeDOM()
+    }
   }
 
   _onPropBoxMouseOver(e) {
