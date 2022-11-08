@@ -161,7 +161,7 @@ export default class PropObject {
           }
           propElement.removeAttribute('data-ir-action')
         }
-        if (pendingAction === 'validate_edit') {
+        if (pendingAction === 'validate_edit' && this.isValidEditedProp()) {
           if (document.body.contains(nameInput)) {
             const inputVal = nameInput.value
             nameInput.remove()
@@ -191,6 +191,10 @@ export default class PropObject {
   _isEditingChild(propKey) {
     const nestedProp = this.$value[propKey]
     return nestedProp && nestedProp.state.editing
+  }
+
+  isValidEditedProp() {
+    console.log(this._editedProp);
   }
 
   _getDOMPropKeyElement(key) {

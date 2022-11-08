@@ -133,15 +133,16 @@ export default class PropToolbar {
   }
 
   _prepareStateFromPropType(type) {
+    const scope = this._targetScopeProp
     switch (type) {
       case 'primitive':
         this._updateState('editable', true, false)
         break
       case 'object':
-        this._updateState('editable', true, false)
+        this._updateState('editable', scope.propType === 'object', false)
         break
       case 'array':
-        this._updateState('editable', true, false)
+        this._updateState('editable', scope.propType === 'object', false)
         break
     }
   }
@@ -220,7 +221,6 @@ export default class PropToolbar {
 
   _onDeleteClick(e) {
     const cb = this._targetCallback
-    console.log(e);
     if (this._targetScopeProp && cb && typeof cb === 'function') {
       // Clean removal of raw property (array, object)
       if (this._targetScopeProp.propType === 'array') {
