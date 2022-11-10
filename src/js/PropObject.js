@@ -6,6 +6,7 @@ import {
   findElementParentByClass,
   findElementChildByAttr,
 } from './helpers/DOM.js'
+import Parser from './utils/Parser.js'
 
 export default class PropObject {
   _rowActions = [
@@ -30,7 +31,9 @@ export default class PropObject {
   _propToolbar = null
   _editedProp = {
     name: null,
+    originalName: null,
     value: null,
+    originalValue: null,
     element: null,
     tmpNameElement: null,
     tmpValueElement: null,
@@ -153,24 +156,22 @@ export default class PropObject {
         if (pendingAction === 'cancel_edit') {
           if (document.body.contains(nameInput)) {
             nameInput.remove()
-            nameElement.innerText = this._editedProp.name
+            nameElement.innerText = this._editedProp.originalName
           }
           if (document.body.contains(valueInput)) {
             valueInput.remove()
-            valueElement.innerText = this._editedProp.value
+            valueElement.innerText = this._editedProp.originalValue
           }
           propElement.removeAttribute('data-ir-action')
         }
         if (pendingAction === 'validate_edit' && this.isValidEditedProp()) {
           if (document.body.contains(nameInput)) {
-            const inputVal = nameInput.value
             nameInput.remove()
-            nameElement.innerText = inputVal
+            nameElement.innerText = this._editedProp.name
           }
           if (document.body.contains(valueInput)) {
-            const inputVal = valueInput.value
             valueInput.remove()
-            valueElement.innerText = inputVal
+            valueElement.innerText = this._editedProp.value
           }
           propElement.removeAttribute('data-ir-action')
         }
@@ -194,7 +195,16 @@ export default class PropObject {
   }
 
   isValidEditedProp() {
-    console.log(this._editedProp);
+    // Prop name
+    const name = this._editedProp.name
+    const originalName = this._editedProp.originalName
+    const diff = name != originalName
+    const uniqueName = !diff ||
+                       (diff && !this.$value.hasOwnProperty(name))
+    // Prop value
+    const validValue = true
+
+    return uniqueName && validValue
   }
 
   _getDOMPropKeyElement(key) {
@@ -431,8 +441,12 @@ export default class PropObject {
     this._propToolbar.resetTargetElement()
   }
 
-  _onPropInputKeyDown(_) {
-    console.log('ok');
+  _onPropNameInputKeyDown(e) {
+    this._editedProp.name = e.target.value
+  }
+
+  _onPropValueInputKeyDown(e) {
+    this._editedProp.value = e.target.value
   }
 
   enablePropEditMode(propName) {
@@ -453,7 +467,13 @@ export default class PropObject {
       const nameElement = this._editedProp.tmpNameElement
       const valueElement = this._editedProp.tmpValueElement
       this._editedProp.name = propName
+      this._editedProp.originalName = propName
+      const parsedValue = Parser.parsePrimitiveValueFromStr(
+        valueElement.innerText
+      )
+      console.log(parsedValue);
       this._editedProp.value = valueElement.innerText
+      this._editedProp.originalValue = valueElement.innerText
       this._editedProp.element = propElement
       const nameInput = document.createElement('input')
       const valueInput = document.createElement('input')
@@ -462,13 +482,18 @@ export default class PropObject {
       nameInput.style.width = `${nameElement.clientWidth}px`
       nameInput.addEventListener(
         'keyup',
-        this._onPropInputKeyDown.bind(this),
+        this._onPropNameInputKeyDown.bind(this),
       )
       valueInput.setAttribute('type', 'text')
       valueInput.setAttribute('value', this._editedProp.value)
       valueInput.style.width = `${valueElement.clientWidth}px`
+      nameInput.addEventListener(
+        'keyup',
+        this._onPropValueInputKeyDown.bind(this),
+      )
       this._editedProp.nameInputElement = nameInput
       this._editedProp.valueInputElement = valueInput
+      console.log(this._editedProp);
       this.updateState('editing', true)
     }
   }
@@ -477,6 +502,9 @@ export default class PropObject {
     if (this.$value.hasOwnProperty(propName)) {
       this.updateState('editing', false)
       this._editedProp.name = null
+      this._editedProp.originalName = null
+      this._editedProp.value = null
+      this._editedProp.originalValue = null
       this._editedProp.element = null
       this._editedProp.nameInputElement = null
       this._editedProp.valueInputElement = null
@@ -488,12 +516,12 @@ export default class PropObject {
   validatePropEditMode(propName) {
     if (this.$value.hasOwnProperty(propName)) {
       this.updateState('editing', false)
-      this._editedProp.name = null
-      this._editedProp.element = null
-      this._editedProp.nameInputElement = null
-      this._editedProp.valueInputElement = null
-      this._editedProp.tmpNameElement = null
-      this._editedProp.tmpValueElement = null
+      // this._editedProp.name = null
+      // this._editedProp.element = null
+      // this._editedProp.nameInputElement = null
+      // this._editedProp.valueInputElement = null
+      // this._editedProp.tmpNameElement = null
+      // this._editedProp.tmpValueElement = null
     }
   }
 
